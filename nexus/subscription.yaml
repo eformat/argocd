@@ -1,0 +1,11 @@
+kind: Subscription
+metadata:
+  name: nexus-operator-hub
+  namespace: nexus
+spec:
+  channel: alpha
+  installPlanApproval: Automatic
+  name: nexus-operator-hub
+  source: community-operators
+  sourceNamespace: openshift-marketplace
+  startingCSV: nexus-operator.v0.1.0

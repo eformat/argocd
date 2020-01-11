@@ -1,0 +1,10 @@
+apiVersion: project.openshift.io/v1
+kind: Project
+metadata:
+  annotations:
+    openshift.io/description: "nexus"
+    openshift.io/display-name: "nexus"
+  name: nexus
+spec:
+  finalizers:
+  - kubernetes

@@ -4,7 +4,7 @@ metadata:
   annotations:
     olm.providedAPIs: ""
   name: amq-streams
-  namespace: amq-streams
+  namespace: strimzi
 spec:
   targetNamespaces:
-  - amq-streams
+  - strimzi

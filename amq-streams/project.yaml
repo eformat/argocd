@@ -2,9 +2,9 @@ apiVersion: project.openshift.io/v1
 kind: Project
 metadata:
   annotations:
-    openshift.io/description: "amq-streams"
-    openshift.io/display-name: "amq-streams"
-  name: amq-streams
+    openshift.io/description: "strimzi"
+    openshift.io/display-name: "strimzi"
+  name: strimzi
 spec:
   finalizers:
   - kubernetes

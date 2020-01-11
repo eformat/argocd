@@ -7,6 +7,6 @@ spec:
   channel: stable
   installPlanApproval: Automatic
   name: amq-streams
-  source: amq-streams-csc
+  source: redhat-operators
   sourceNamespace: openshift-marketplace
   startingCSV: amqstreams.v1.3.0

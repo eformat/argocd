@@ -1,8 +1,0 @@
-apiVersion: operators.coreos.com/v1
-kind: CatalogSourceConfig
-metadata:
-  name: amq-streams-csc
-  namespace: openshift-marketplace
-spec:
-  targetNamespace: strimzi
-  packages: amq-streams

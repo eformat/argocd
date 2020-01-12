@@ -28,11 +28,34 @@ data:
       ignoreDifferences: |
         jsonPointers:
         - /spec/template/spec/containers/0/image
+
+/PersistentVolumeClaim/strimzi/data-my-cluster-kafka-0
 ```
 
-### Applications
+### Extraneous ignores
 
-amq-streams Operator
+```
+-- argocd ignore extraneous
+https://argoproj.github.io/argo-cd/user-guide/compare-options/#ignoring-resources-that-are-extraneous
+
+metadata:
+  annotations:
+    argocd.argoproj.io/compare-options: IgnoreExtraneous
+
+-- https://argoproj.github.io/argo-cd/user-guide/sync-options/
+
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false
+
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: Validate=false
+```
+
+### Infrastructure Applications
+
+`amq-streams operator`
 ```
 argocd repo add git@github.com:eformat/argocd.git --ssh-private-key-path ~/.ssh/id_rsa
 argocd app create amq-streams \
@@ -47,7 +70,7 @@ argocd app sync amq-streams --prune
 argocd app delete amq-streams
 ```
 
-nexus
+`nexus operator`
 ```
 argocd repo add git@github.com:eformat/argocd.git --ssh-private-key-path ~/.ssh/id_rsa
 argocd app create nexus \
@@ -61,3 +84,20 @@ argocd app sync nexus --prune
 #
 argocd app delete nexus
 ```
+
+`tekton`
+```
+argocd repo add git@github.com:eformat/argocd.git --ssh-private-key-path ~/.ssh/id_rsa
+argocd app create tekton \
+  --repo git@github.com:eformat/argocd.git \
+  --path tekton \
+  --dest-server https://kubernetes.default.svc \
+  --dest-namespace openshift-operators
+
+argocd app get tekton
+argocd app sync tekton --prune
+#
+argocd app delete tekton
+```
+
+### Applications

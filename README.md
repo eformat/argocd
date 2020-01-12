@@ -101,3 +101,25 @@ argocd app delete tekton
 ```
 
 ### Applications
+
+`quarkus-coffe-demo`
+```
+argocd repo add git@github.com:eformat/argocd.git --ssh-private-key-path ~/.ssh/id_rsa
+argocd app create quarkus-coffeeshop-demo \
+  --repo git@github.com:eformat/argocd.git \
+  --path quarkus-coffeeshop-demo \
+  --dest-server https://kubernetes.default.svc \
+  --dest-namespace quarkus-coffee
+
+argocd app get quarkus-coffeeshop-demo
+argocd app sync quarkus-coffeeshop-demo --prune
+#
+argocd app delete quarkus-coffeeshop-demo
+```
+```
+oc -n quarkus-coffee create serviceaccount pipeline
+oc -n quarkus-coffee adm policy add-scc-to-user privileged -z pipeline
+oc -n quarkus-coffee adm policy add-role-to-user edit -z pipeline
+```
+
+https://github.com/cescoffier/

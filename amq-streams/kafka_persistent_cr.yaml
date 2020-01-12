@@ -30,7 +30,7 @@ spec:
         metadata:
           annotations:
             argocd.argoproj.io/compare-options: IgnoreExtraneous
-            argocd.argoproj.io/sync-options=Prune: false
+            argocd.argoproj.io/sync-options: Prune=false
     storage:
       type: persistent-claim
       size: 5Gi
@@ -149,7 +149,7 @@ spec:
         metadata:
           annotations:
             argocd.argoproj.io/compare-options: IgnoreExtraneous
-            argocd.argoproj.io/sync-options=Prune: false
+            argocd.argoproj.io/sync-options: Prune=false
     storage:
       type: persistent-claim
       size: 5Gi

@@ -9,7 +9,7 @@ metadata:
   namespace: quarkus-coffee
 spec:
   failedBuildsHistoryLimit: 5
-  nodeSelector: null
+  nodeSelector:
   output:
     to:
       kind: ImageStreamTag
@@ -71,7 +71,7 @@ metadata:
   namespace: quarkus-coffee
 spec:
   failedBuildsHistoryLimit: 5
-  nodeSelector: null
+  nodeSelector:
   output:
     to:
       kind: ImageStreamTag
@@ -133,7 +133,7 @@ metadata:
   namespace: quarkus-coffee
 spec:
   failedBuildsHistoryLimit: 5
-  nodeSelector: null
+  nodeSelector:
   output:
     to:
       kind: ImageStreamTag
@@ -195,7 +195,7 @@ metadata:
   namespace: quarkus-coffee
 spec:
   failedBuildsHistoryLimit: 5
-  nodeSelector: null
+  nodeSelector:
   output:
     to:
       kind: ImageStreamTag

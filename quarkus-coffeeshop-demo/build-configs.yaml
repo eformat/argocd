@@ -57,6 +57,7 @@ spec:
   - imageChange:
       lastTriggeredImageID: registry.access.redhat.com/ubi8/ubi:latest
     type: ImageChange
+status: []
 ---
 apiVersion: build.openshift.io/v1
 kind: BuildConfig
@@ -116,6 +117,7 @@ spec:
   - imageChange:
       lastTriggeredImageID: registry.access.redhat.com/ubi8/ubi:latest
     type: ImageChange
+status: []    
 ---
 apiVersion: build.openshift.io/v1
 kind: BuildConfig
@@ -175,6 +177,7 @@ spec:
   - imageChange:
       lastTriggeredImageID: registry.access.redhat.com/ubi8/ubi:latest
     type: ImageChange
+status: []    
 ---
 apiVersion: build.openshift.io/v1
 kind: BuildConfig
@@ -234,3 +237,4 @@ spec:
   - imageChange:
       lastTriggeredImageID: registry.access.redhat.com/ubi8/ubi:latest
     type: ImageChange
+status: []

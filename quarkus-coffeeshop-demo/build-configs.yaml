@@ -4,6 +4,7 @@ kind: BuildConfig
 metadata:
   labels:
     build: barista-http
+    app.kubernetes.io/instance: quarkus-coffeeshop-demo
   name: barista-http
   namespace: quarkus-coffee
 spec:
@@ -64,6 +65,7 @@ kind: BuildConfig
 metadata:
   labels:
     build: barista-kafka-julie
+    app.kubernetes.io/instance: quarkus-coffeeshop-demo    
   name: barista-kafka-julie
   namespace: quarkus-coffee
 spec:
@@ -124,6 +126,7 @@ kind: BuildConfig
 metadata:
   labels:
     build: barista-kafka-tom
+    app.kubernetes.io/instance: quarkus-coffeeshop-demo    
   name: barista-kafka-tom
   namespace: quarkus-coffee
 spec:
@@ -184,6 +187,7 @@ kind: BuildConfig
 metadata:
   labels:
     build: coffeeshop-service
+    app.kubernetes.io/instance: quarkus-coffeeshop-demo    
   name: coffeeshop-service
   namespace: quarkus-coffee
 spec:

@@ -6,7 +6,7 @@ spec:
   timeout: '60m'
   pipelineRef:
     name: deploy-pipeline
-  serviceAccount: 'pipeline'
+  serviceAccountName: 'pipeline'
   resources:
   - name: app-git
     resourceRef:

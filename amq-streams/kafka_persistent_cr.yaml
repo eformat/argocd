@@ -25,11 +25,12 @@ spec:
       transaction.state.log.replication.factor: 3
       transaction.state.log.min.isr: 2
       log.message.format.version: '2.3'
-    persistentVolumeClaim:
-      metadata:
-        annotations:
-        - argocd.argoproj.io/compare-options: IgnoreExtraneous
-        - argocd.argoproj.io/sync-options=Prune: false
+    template:
+      persistentVolumeClaim:
+        metadata:
+          annotations:
+            argocd.argoproj.io/compare-options: IgnoreExtraneous
+            argocd.argoproj.io/sync-options=Prune: false
     storage:
       type: persistent-claim
       size: 5Gi
@@ -143,11 +144,12 @@ spec:
     jvmOptions:
       -Xms: 512m
       -Xmx: 512m
-    persistentVolumeClaim:
-      metadata:
-        annotations:
-        - argocd.argoproj.io/compare-options: IgnoreExtraneous
-        - argocd.argoproj.io/sync-options=Prune: false
+    template:
+      persistentVolumeClaim:
+        metadata:
+          annotations:
+            argocd.argoproj.io/compare-options: IgnoreExtraneous
+            argocd.argoproj.io/sync-options=Prune: false
     storage:
       type: persistent-claim
       size: 5Gi

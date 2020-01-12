@@ -1,5 +1,6 @@
 # argocd
 
+Install
 ```
 oc new-project argocd --display-name="ArgoCD" --description="ArgoCD"
 oc apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v1.3.6/manifests/install.yaml
@@ -8,6 +9,7 @@ sudo chmod +x /usr/bin/argocd
 oc port-forward svc/argocd-server -n argocd 4443:443 &
 ```
 
+Login
 ```
 PSWD=$(oc get pods -n argocd -l app.kubernetes.io/name=argocd-server -o name | cut -d'/' -f 2)
 argocd login localhost:4443 --insecure --username admin --password $PSWD
@@ -15,6 +17,7 @@ argocd account update-password --insecure
 argocd relogin
 ```
 
+Configure
 ```
 -- ignore first image in sync for deployment config
 oc edit cm argocd-cm -n argocd
@@ -27,6 +30,9 @@ data:
         - /spec/template/spec/containers/0/image
 ```
 
+### Applications
+
+amq-streams Operator
 ```
 argocd repo add git@github.com:eformat/argocd.git --ssh-private-key-path ~/.ssh/id_rsa
 argocd app create amq-streams \
@@ -39,4 +45,19 @@ argocd app get amq-streams
 argocd app sync amq-streams --prune
 #
 argocd app delete amq-streams
+```
+
+nexus
+```
+argocd repo add git@github.com:eformat/argocd.git --ssh-private-key-path ~/.ssh/id_rsa
+argocd app create nexus \
+  --repo git@github.com:eformat/argocd.git \
+  --path nexus \
+  --dest-server https://kubernetes.default.svc \
+  --dest-namespace nexus
+
+argocd app get nexus
+argocd app sync nexus --prune
+#
+argocd app delete nexus
 ```

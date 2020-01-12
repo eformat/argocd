@@ -1,0 +1,76 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: barista-http
+  name: barista-http
+  namespace: quarkus-coffee
+spec:
+  ports:
+  - name: 8080-tcp
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: barista-http
+    deploymentconfig: barista-http
+  sessionAffinity: None
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: barista-kafka-julie
+  name: barista-kafka-julie
+  namespace: quarkus-coffee
+spec:
+  ports:
+  - name: 8080-tcp
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: barista-kafka-julie
+    deploymentconfig: barista-kafka-julie
+  sessionAffinity: None
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: barista-kafka-tom
+  name: barista-kafka-tom
+  namespace: quarkus-coffee
+spec:
+  ports:
+  - name: 8080-tcp
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: barista-kafka-tom
+    deploymentconfig: barista-kafka-tom
+  sessionAffinity: None
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: coffeeshop-service
+  name: coffeeshop-service
+  namespace: quarkus-coffee
+spec:
+  ports:
+  - name: 8080-tcp
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: coffeeshop-service
+    deploymentconfig: coffeeshop-service
+  sessionAffinity: None
+  type: ClusterIP

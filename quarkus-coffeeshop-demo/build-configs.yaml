@@ -1,0 +1,236 @@
+---
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  labels:
+    build: barista-http
+  name: barista-http
+  namespace: quarkus-coffee
+spec:
+  failedBuildsHistoryLimit: 5
+  nodeSelector: null
+  output:
+    to:
+      kind: ImageStreamTag
+      name: barista-http:latest
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    dockerfile: |-
+      FROM registry.access.redhat.com/ubi8/ubi:latest
+      COPY application-barista-http /application
+      EXPOSE 8080
+      CMD ./application -Xmx10m -Xms10m -Xmn10m -XX:+PrintGC -XX:+VerboseGC -XX:+PrintGCTimeStamps +XX:+PrintHeapShape -Dquarkus.http.host=0.0.0.0 -Dquarkus.http.port=8080
+    images:
+    - as: null
+      from:
+        kind: ImageStreamTag
+        name: quarkus-coffeeshop-demo:latest
+        namespace: quarkus-coffee
+      paths:
+      - destinationDir: .
+        sourcePath: /home/quarkus/application-barista-http
+    type: Dockerfile
+  strategy:
+    dockerStrategy:
+      from:
+        kind: ImageStreamTag
+        name: ubi:latest
+    type: Docker
+  successfulBuildsHistoryLimit: 5
+  triggers:
+  - github:
+      secret: kmoCBi_BQnT4cV6Tm-L5
+    type: GitHub
+  - generic:
+      secret: 1-8_Abmy-Cw5OIBn2qLT
+    type: Generic
+  - imageChange:
+      from:
+        kind: ImageStreamTag
+        name: quarkus-coffeeshop-demo:latest
+        namespace: quarkus-coffee
+      lastTriggeredImageID: image-registry.openshift-image-registry.svc:5000/quarkus-coffee/quarkus-coffeeshop-demo:latest
+    type: ImageChange
+  - type: ConfigChange
+  - imageChange:
+      lastTriggeredImageID: registry.access.redhat.com/ubi8/ubi:latest
+    type: ImageChange
+---
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  labels:
+    build: barista-kafka-julie
+  name: barista-kafka-julie
+  namespace: quarkus-coffee
+spec:
+  failedBuildsHistoryLimit: 5
+  nodeSelector: null
+  output:
+    to:
+      kind: ImageStreamTag
+      name: barista-kafka-julie:latest
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    dockerfile: |-
+      FROM registry.access.redhat.com/ubi8/ubi:latest
+      COPY application-barista-kafka /application
+      EXPOSE 8080
+      CMD ./application -Xmx10m -Xms10m -Xmn10m -XX:+PrintGC -XX:+VerboseGC -XX:+PrintGCTimeStamps +XX:+PrintHeapShape -Dbarista.name=julie -Dmp.messaging.incoming.orders.client.id=julie -Dmp.messaging.incoming.orders.bootstrap.servers=my-cluster-kafka-bootstrap.strimzi.svc:9092 -Dmp.messaging.outgoing.queue.bootstrap.servers=my-cluster-kafka-bootstrap.strimzi.svc:9092
+    images:
+    - as: null
+      from:
+        kind: ImageStreamTag
+        name: quarkus-coffeeshop-demo:latest
+        namespace: quarkus-coffee
+      paths:
+      - destinationDir: .
+        sourcePath: /home/quarkus/application-barista-kafka
+    type: Dockerfile
+  strategy:
+    dockerStrategy:
+      from:
+        kind: ImageStreamTag
+        name: ubi:latest
+    type: Docker
+  successfulBuildsHistoryLimit: 5
+  triggers:
+  - github:
+      secret: TpH_bkNMkqfYn709fSUe
+    type: GitHub
+  - generic:
+      secret: CvpBwWfJPwTeOKOKz4H3
+    type: Generic
+  - imageChange:
+      from:
+        kind: ImageStreamTag
+        name: quarkus-coffeeshop-demo:latest
+        namespace: quarkus-coffee
+      lastTriggeredImageID: image-registry.openshift-image-registry.svc:5000/quarkus-coffee/quarkus-coffeeshop-demo:latest
+    type: ImageChange
+  - type: ConfigChange
+  - imageChange:
+      lastTriggeredImageID: registry.access.redhat.com/ubi8/ubi:latest
+    type: ImageChange
+---
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  labels:
+    build: barista-kafka-tom
+  name: barista-kafka-tom
+  namespace: quarkus-coffee
+spec:
+  failedBuildsHistoryLimit: 5
+  nodeSelector: null
+  output:
+    to:
+      kind: ImageStreamTag
+      name: barista-kafka-tom:latest
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    dockerfile: |-
+      FROM registry.access.redhat.com/ubi8/ubi:latest
+      COPY application-barista-kafka /application
+      EXPOSE 8080
+      CMD ./application -Xmx10m -Xms10m -Xmn10m -XX:+PrintGC -XX:+VerboseGC -XX:+PrintGCTimeStamps +XX:+PrintHeapShape -Dbarista.name=tom -Dmp.messaging.incoming.orders.client.id=tom -Dmp.messaging.incoming.orders.bootstrap.servers=my-cluster-kafka-bootstrap.strimzi.svc:9092 -Dmp.messaging.outgoing.queue.bootstrap.servers=my-cluster-kafka-bootstrap.strimzi.svc:9092
+    images:
+    - as: null
+      from:
+        kind: ImageStreamTag
+        name: quarkus-coffeeshop-demo:latest
+        namespace: quarkus-coffee
+      paths:
+      - destinationDir: .
+        sourcePath: /home/quarkus/application-barista-kafka
+    type: Dockerfile
+  strategy:
+    dockerStrategy:
+      from:
+        kind: ImageStreamTag
+        name: ubi:latest
+    type: Docker
+  successfulBuildsHistoryLimit: 5
+  triggers:
+  - github:
+      secret: 5R3aWVAhtJAMzzOdphw6
+    type: GitHub
+  - generic:
+      secret: ewrcCUwAvEzFHfX-BFxX
+    type: Generic
+  - imageChange:
+      from:
+        kind: ImageStreamTag
+        name: quarkus-coffeeshop-demo:latest
+        namespace: quarkus-coffee
+      lastTriggeredImageID: image-registry.openshift-image-registry.svc:5000/quarkus-coffee/quarkus-coffeeshop-demo:latest
+    type: ImageChange
+  - type: ConfigChange
+  - imageChange:
+      lastTriggeredImageID: registry.access.redhat.com/ubi8/ubi:latest
+    type: ImageChange
+---
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  labels:
+    build: coffeeshop-service
+  name: coffeeshop-service
+  namespace: quarkus-coffee
+spec:
+  failedBuildsHistoryLimit: 5
+  nodeSelector: null
+  output:
+    to:
+      kind: ImageStreamTag
+      name: coffeeshop-service:latest
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    dockerfile: |-
+      FROM registry.access.redhat.com/ubi8/ubi:latest
+      COPY application-coffeeshop-service /application
+      EXPOSE 8080
+      CMD ./application -Xmx10m -Xms10m -Xmn10m -XX:+PrintGC -XX:+VerboseGC -XX:+PrintGCTimeStamps +XX:+PrintHeapShape -Dquarkus.http.host=0.0.0.0 -Dme.escoffier.quarkus.coffeeshop.http.BaristaService/mp-rest/url=http://barista-http:8080 -Dmp.messaging.outgoing.orders.bootstrap.servers=my-cluster-kafka-bootstrap.strimzi.svc:9092 -Dmp.messaging.incoming.beverages.bootstrap.servers=my-cluster-kafka-bootstrap.strimzi.svc:9092 -Dmp.messaging.outgoing.queue.bootstrap.servers=my-cluster-kafka-bootstrap.strimzi.svc:9092
+    images:
+    - as: null
+      from:
+        kind: ImageStreamTag
+        name: quarkus-coffeeshop-demo:latest
+        namespace: quarkus-coffee
+      paths:
+      - destinationDir: .
+        sourcePath: /home/quarkus/application-coffeeshop-service
+    type: Dockerfile
+  strategy:
+    dockerStrategy:
+      from:
+        kind: ImageStreamTag
+        name: ubi:latest
+    type: Docker
+  successfulBuildsHistoryLimit: 5
+  triggers:
+  - github:
+      secret: KC5-WTXWnSQInNkUE6I7
+    type: GitHub
+  - generic:
+      secret: wz6f_uIdOJEJoLas9Ysc
+    type: Generic
+  - imageChange:
+      from:
+        kind: ImageStreamTag
+        name: quarkus-coffeeshop-demo:latest
+        namespace: quarkus-coffee
+      lastTriggeredImageID: image-registry.openshift-image-registry.svc:5000/quarkus-coffee/quarkus-coffeeshop-demo:latest
+    type: ImageChange
+  - type: ConfigChange
+  - imageChange:
+      lastTriggeredImageID: registry.access.redhat.com/ubi8/ubi:latest
+    type: ImageChange

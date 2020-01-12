@@ -1,0 +1,92 @@
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  labels:
+    app: barista-http
+  name: barista-http
+  namespace: quarkus-coffee
+spec:
+  host: barista-http-quarkus-coffee.apps.foo.sandbox925.opentlc.com
+  port:
+    targetPort: 8080-tcp
+  subdomain: ""
+  to:
+    kind: Service
+    name: barista-http
+    weight: 100
+  wildcardPolicy: None
+status:
+  ingress:
+    - conditions:
+        - status: 'True'
+          type: Admitted
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  labels:
+    app: barista-kafka-julie
+  name: barista-kafka-julie
+  namespace: quarkus-coffee
+spec:
+  host: barista-kafka-julie-quarkus-coffee.apps.foo.sandbox925.opentlc.com
+  port:
+    targetPort: 8080-tcp
+  subdomain: ""
+  to:
+    kind: Service
+    name: barista-kafka-julie
+    weight: 100
+  wildcardPolicy: None
+status:
+  ingress:
+    - conditions:
+        - status: 'True'
+          type: Admitted
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  labels:
+    app: barista-kafka-tom
+  name: barista-kafka-tom
+  namespace: quarkus-coffee
+spec:
+  host: barista-kafka-tom-quarkus-coffee.apps.foo.sandbox925.opentlc.com
+  port:
+    targetPort: 8080-tcp
+  subdomain: ""
+  to:
+    kind: Service
+    name: barista-kafka-tom
+    weight: 100
+  wildcardPolicy: None
+status:
+  ingress:
+    - conditions:
+        - status: 'True'
+          type: Admitted
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  labels:
+    app: coffeeshop-service
+  name: coffeeshop-service
+  namespace: quarkus-coffee
+spec:
+  host: coffeeshop-service-quarkus-coffee.apps.foo.sandbox925.opentlc.com
+  port:
+    targetPort: 8080-tcp
+  subdomain: ""
+  to:
+    kind: Service
+    name: coffeeshop-service
+    weight: 100
+  wildcardPolicy: None
+status:
+  ingress:
+    - conditions:
+        - status: 'True'
+          type: Admitted

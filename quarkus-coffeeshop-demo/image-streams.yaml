@@ -1,0 +1,75 @@
+---
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  labels:
+    build: barista-http
+  name: barista-http
+  namespace: quarkus-coffee
+spec:
+  lookupPolicy:
+    local: false
+---
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  labels:
+    build: barista-kafka-julie
+  name: barista-kafka-julie
+  namespace: quarkus-coffee
+spec:
+  lookupPolicy:
+    local: false
+---
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  labels:
+    build: barista-kafka-tom
+  name: barista-kafka-tom
+  namespace: quarkus-coffee
+spec:
+  lookupPolicy:
+    local: false
+---
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  labels:
+    build: coffeeshop-service
+  name: coffeeshop-service
+  namespace: quarkus-coffee
+spec:
+  lookupPolicy:
+    local: false
+---
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  labels:
+    build: coffeeshop-service
+  name: ubi
+  namespace: quarkus-coffee
+spec:
+  lookupPolicy:
+    local: false
+  tags:
+  - annotations:
+      openshift.io/imported-from: registry.access.redhat.com/ubi8/ubi:latest
+    from:
+      kind: DockerImage
+      name: registry.access.redhat.com/ubi8/ubi:latest
+    generation: 2
+    importPolicy: {}
+    name: latest
+    referencePolicy:
+      type: Source
+---
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: quarkus-coffeeshop-demo
+  namespace: quarkus-coffee
+spec:
+  lookupPolicy:
+    local: false

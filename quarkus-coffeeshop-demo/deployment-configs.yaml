@@ -1,0 +1,244 @@
+---
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  labels:
+    app: barista-http
+  name: barista-http
+  namespace: quarkus-coffee
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    app: barista-http
+    deploymentconfig: barista-http
+  strategy:
+    activeDeadlineSeconds: 21600
+    resources: {}
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
+  template:
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftNewApp
+      creationTimestamp: null
+      labels:
+        app: barista-http
+        deploymentconfig: barista-http
+    spec:
+      containers:
+      - image: image-registry.openshift-image-registry.svc:5000/quarkus-coffee/barista-http:latest
+        imagePullPolicy: Always
+        name: barista-http
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+  test: false
+  triggers:
+  - type: ConfigChange
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - barista-http
+      from:
+        kind: ImageStreamTag
+        name: barista-http:latest
+        namespace: quarkus-coffee
+      lastTriggeredImage: image-registry.openshift-image-registry.svc:5000/quarkus-coffee/barista-http:latest
+    type: ImageChange
+---
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  labels:
+    app: barista-kafka-julie
+  name: barista-kafka-julie
+  namespace: quarkus-coffee
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    app: barista-kafka-julie
+    deploymentconfig: barista-kafka-julie
+  strategy:
+    activeDeadlineSeconds: 21600
+    resources: {}
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
+  template:
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftNewApp
+      creationTimestamp: null
+      labels:
+        app: barista-kafka-julie
+        deploymentconfig: barista-kafka-julie
+    spec:
+      containers:
+      - image: image-registry.openshift-image-registry.svc:5000/quarkus-coffee/barista-kafka-julie:latest
+        imagePullPolicy: Always
+        name: barista-kafka-julie
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+  test: false
+  triggers:
+  - type: ConfigChange
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - barista-kafka-julie
+      from:
+        kind: ImageStreamTag
+        name: barista-kafka-julie:latest
+        namespace: quarkus-coffee
+      lastTriggeredImage: image-registry.openshift-image-registry.svc:5000/quarkus-coffee/barista-kafka-julie:latest
+    type: ImageChange
+---
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  labels:
+    app: barista-kafka-tom
+  name: barista-kafka-tom
+  namespace: quarkus-coffee
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    app: barista-kafka-tom
+    deploymentconfig: barista-kafka-tom
+  strategy:
+    activeDeadlineSeconds: 21600
+    resources: {}
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
+  template:
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftNewApp
+      creationTimestamp: null
+      labels:
+        app: barista-kafka-tom
+        deploymentconfig: barista-kafka-tom
+    spec:
+      containers:
+      - image: image-registry.openshift-image-registry.svc:5000/quarkus-coffee/barista-kafka-tom:latest
+        imagePullPolicy: Always
+        name: barista-kafka-tom
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+  test: false
+  triggers:
+  - type: ConfigChange
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - barista-kafka-tom
+      from:
+        kind: ImageStreamTag
+        name: barista-kafka-tom:latest
+        namespace: quarkus-coffee
+      lastTriggeredImage: image-registry.openshift-image-registry.svc:5000/quarkus-coffee/barista-kafka-tom:latest
+    type: ImageChange
+---
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  labels:
+    app: coffeeshop-service
+  name: coffeeshop-service
+  namespace: quarkus-coffee
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    app: coffeeshop-service
+    deploymentconfig: coffeeshop-service
+  strategy:
+    activeDeadlineSeconds: 21600
+    resources: {}
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
+  template:
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftNewApp
+      creationTimestamp: null
+      labels:
+        app: coffeeshop-service
+        deploymentconfig: coffeeshop-service
+    spec:
+      containers:
+      - image: image-registry.openshift-image-registry.svc:5000/quarkus-coffee/coffeeshop-service:latest
+        imagePullPolicy: Always
+        name: coffeeshop-service
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+  test: false
+  triggers:
+  - type: ConfigChange
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - coffeeshop-service
+      from:
+        kind: ImageStreamTag
+        name: coffeeshop-service:latest
+        namespace: quarkus-coffee
+      lastTriggeredImage: image-registry.openshift-image-registry.svc:5000/quarkus-coffee/coffeeshop-service:latest
+    type: ImageChange

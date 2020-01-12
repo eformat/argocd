@@ -5,6 +5,8 @@ metadata:
     openshift.io/description: "nexus"
     openshift.io/display-name: "nexus"
   name: nexus
+  labels:
+    app.kubernetes.io/instance: nexus
 spec:
   finalizers:
   - kubernetes

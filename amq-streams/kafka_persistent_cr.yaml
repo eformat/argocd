@@ -29,10 +29,9 @@ spec:
       type: persistent-claim
       size: 5Gi
       deleteClaim: false
-      metadata:
-        annotations:
-          - argocd.argoproj.io/compare-options: IgnoreExtraneous
-          - argocd.argoproj.io/sync-options=Prune: false
+      annotations:
+        - argocd.argoproj.io/compare-options: IgnoreExtraneous
+        - argocd.argoproj.io/sync-options=Prune: false
     metrics:
       # Inspired by config from Kafka 2.0.0 example rules:
       # https://github.com/prometheus/jmx_exporter/blob/master/example_configs/kafka-2_0_0.yml
@@ -146,10 +145,9 @@ spec:
       type: persistent-claim
       size: 5Gi
       deleteClaim: false
-      metadata:
-        annotations:
-          - argocd.argoproj.io/compare-options: IgnoreExtraneous
-          - argocd.argoproj.io/sync-options=Prune: false      
+      annotations:
+        - argocd.argoproj.io/compare-options: IgnoreExtraneous
+        - argocd.argoproj.io/sync-options=Prune: false      
     metrics:
       # Inspired by Zookeeper rules
       # https://github.com/prometheus/jmx_exporter/blob/master/example_configs/zookeeper.yaml

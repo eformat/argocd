@@ -1,0 +1,12 @@
+apiVersion: project.openshift.io/v1
+kind: Project
+metadata:
+  annotations:
+    openshift.io/description: "Quarkus Coffee Shop"
+    openshift.io/display-name: "Quarkus Coffee Shop"
+  name: quarkus-coffee
+  labels:
+    app.kubernetes.io/instance: quarkus-coffee
+spec:
+  finalizers:
+  - kubernetes

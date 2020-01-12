@@ -1,0 +1,16 @@
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineRun
+metadata:
+  generateName: quarkus-coffeeshop-demo-deploy-pipelinerun-
+spec:
+  timeout: '60m'
+  pipelineRef:
+    name: deploy-pipeline
+  serviceAccount: 'pipeline'
+  resources:
+  - name: app-git
+    resourceRef:
+      name: quarkus-coffeeshop-git
+  - name: app-image
+    resourceRef:
+      name: quarkus-coffeeshop-image

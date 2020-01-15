@@ -28,8 +28,12 @@ data:
       ignoreDifferences: |
         jsonPointers:
         - /spec/template/spec/containers/0/image
-
-/PersistentVolumeClaim/strimzi/data-my-cluster-kafka-0
+        - /spec/template/spec/triggers/1/imageChangeParams/lastTriggeredImage
+    build.openshift.io/BuildConfig:
+      ignoreDifferences: |
+        jsonPointers:
+        - /spec/triggers
+        - /status
 ```
 
 ### Extraneous ignores
@@ -121,5 +125,3 @@ oc -n quarkus-coffee create serviceaccount pipeline
 oc -n quarkus-coffee adm policy add-scc-to-user privileged -z pipeline
 oc -n quarkus-coffee adm policy add-role-to-user edit -z pipeline
 ```
-
-https://github.com/cescoffier/

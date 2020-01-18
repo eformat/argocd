@@ -1,6 +1,6 @@
 # argocd
 
-Install
+#### Install from template
 ```
 oc new-project argocd --display-name="ArgoCD" --description="ArgoCD"
 oc apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v1.3.6/manifests/install.yaml
@@ -9,7 +9,7 @@ sudo chmod +x /usr/bin/argocd
 oc port-forward svc/argocd-server -n argocd 4443:443 &
 ```
 
-Login
+Login locally
 ```
 PSWD=$(oc get pods -n argocd -l app.kubernetes.io/name=argocd-server -o name | cut -d'/' -f 2)
 argocd login localhost:4443 --insecure --username admin --password $PSWD
@@ -17,7 +17,116 @@ argocd account update-password --insecure
 argocd relogin
 ```
 
-Configure
+Create Route
+```
+oc create route passthrough argocd --service=argocd-server --port=https --insecure-policy=Redirect
+```
+
+#### Install from operator
+
+`Note`: Operator is not latest version and has issues with git, sso (use template for now for fully working solution)
+
+- https://argocd-operator.readthedocs.io/en/latest/guides/install-openshift/
+
+```
+oc create -f https://raw.githubusercontent.com/argoproj-labs/argocd-operator/master/deploy/service_account.yaml
+oc create -f https://raw.githubusercontent.com/argoproj-labs/argocd-operator/master/deploy/role.yaml
+oc create -f https://raw.githubusercontent.com/argoproj-labs/argocd-operator/master/deploy/role_binding.yaml
+
+oc create -f https://raw.githubusercontent.com/argoproj-labs/argocd-operator/master/deploy/argo-cd/argoproj_v1alpha1_application_crd.yaml
+oc create -f https://raw.githubusercontent.com/argoproj-labs/argocd-operator/master/deploy/argo-cd/argoproj_v1alpha1_appproject_crd.yaml
+oc create -f https://raw.githubusercontent.com/argoproj-labs/argocd-operator/master/deploy/crds/argoproj_v1alpha1_argocd_crd.yaml
+
+oc create -n openshift-marketplace -f https://raw.githubusercontent.com/argoproj-labs/argocd-operator/master/deploy/catalog_source.yaml
+oc get pods -n openshift-marketplace -l olm.catalogSource=argocd-catalog
+
+oc new-project argocd --display-name="ArgoCD" --description="ArgoCD"
+oc create -n argocd -f https://raw.githubusercontent.com/argoproj-labs/argocd-operator/master/deploy/operator_group.yaml
+
+#oc create -n argocd -f https://raw.githubusercontent.com/argoproj-labs/argocd-operator/master/deploy/subscription.yaml
+
+cat <<EOF | oc apply -f -
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: argocd-operator
+  namespace: argocd
+spec:
+  channel: alpha
+  installPlanApproval: Automatic
+  name: argocd-operator
+  source: argocd-catalog
+  sourceNamespace: openshift-marketplace
+  startingCSV: argocd-operator.v0.0.3
+EOF
+
+oc get installplan --all-namespaces
+```
+
+#### SSO
+
+- https://blog.openshift.com/openshift-authentication-integration-with-argocd/
+
+```
+-- hacks
+oc patch deployment argocd-dex-server \
+  -p '{"spec": {"template": {"spec": {"containers": [{"name": "dex","image": "quay.io/ablock/dex:openshift-connector"}]}}}}'
+
+-- if using operator
+-- https://github.com/jmckind/argocd-operator/pull/40/files
+oc edit deployment argocd-server
+
+    spec:
+      containers:
+      - command:
+        - argocd-server
+        - --dex-server
+        - 'http://argocd-dex-server:5556'
+
+--
+oc serviceaccounts get-token argocd-dex-server
+oc annotate sa/argocd-dex-server serviceaccounts.openshift.io/oauth-redirecturi.argocd=https://argocd-argocd.apps.foo.sandbox925.opentlc.com/api/dex/callback --overwrite
+
+oc edit cm argocd-cm -n argocd
+
+data:
+  url: https://example-argocd-server-argocd.apps.foo.sandbox925.opentlc.com
+  dex.config: |
+    connectors:
+      # OpenShift
+      - type: openshift
+        id: openshift
+        name: OpenShift
+        config:
+          issuer: https://api.foo.sandbox925.opentlc.com:6443
+          clientID: system:serviceaccount:argocd:argocd-dex-server
+          clientSecret: <token from above>
+          redirectURI: https://argocd-argocd.apps.foo.sandbox925.opentlc.com/api/dex/callback
+          insecureCA: true
+```
+
+Add default policy as `role:admin`
+```
+-- https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-rbac-cm.yaml
+
+oc edit cm argocd-rbac-cm
+
+data:
+  policy.default: role:admin
+```
+
+Login sso
+```
+HOST=$(oc get route argocd --template='{{ .spec.host }}')
+argocd login $HOST:443 --sso --insecure --username admin
+```
+
+TIP: argocd route - `CERT INVALID ERROR` - in google chrome type 'thisisunsafe' to skip
+
+#### Configure
+
+Ignore openshift differences that dont sync.
+
 ```
 -- ignore first image in sync for deployment config
 oc edit cm argocd-cm -n argocd
@@ -28,7 +137,7 @@ data:
       ignoreDifferences: |
         jsonPointers:
         - /spec/template/spec/containers/0/image
-        - /spec/template/spec/triggers/1/imageChangeParams/lastTriggeredImage
+        - /spec/triggers/1/imageChangeParams/lastTriggeredImage
     build.openshift.io/BuildConfig:
       ignoreDifferences: |
         jsonPointers:
@@ -124,4 +233,19 @@ argocd app delete quarkus-coffeeshop-demo
 oc -n quarkus-coffee create serviceaccount pipeline
 oc -n quarkus-coffee adm policy add-scc-to-user privileged -z pipeline
 oc -n quarkus-coffee adm policy add-role-to-user edit -z pipeline
+```
+
+`welcome`
+```
+argocd repo add git@github.com:eformat/welcome.git --ssh-private-key-path ~/.ssh/id_rsa
+argocd app create welcome \
+  --repo git@github.com:eformat/welcome.git \
+  --path argocd \
+  --dest-server https://kubernetes.default.svc \
+  --dest-namespace welcome
+
+argocd app get welcome
+argocd app sync welcome --prune
+#
+argocd app delete welcome
 ```

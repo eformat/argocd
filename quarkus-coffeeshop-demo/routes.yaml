@@ -32,7 +32,6 @@ spec:
   host: barista-kafka-julie-quarkus-coffee.apps.foo.sandbox1543.opentlc.com
   port:
     targetPort: 8080-tcp
-  subdomain: ""
   to:
     kind: Service
     name: barista-kafka-julie
@@ -55,7 +54,6 @@ spec:
   host: barista-kafka-tom-quarkus-coffee.apps.foo.sandbox1543.opentlc.com
   port:
     targetPort: 8080-tcp
-  subdomain: ""
   to:
     kind: Service
     name: barista-kafka-tom
@@ -78,7 +76,6 @@ spec:
   host: coffeeshop-service-quarkus-coffee.apps.foo.sandbox1543.opentlc.com
   port:
     targetPort: 8080-tcp
-  subdomain: ""
   to:
     kind: Service
     name: coffeeshop-service

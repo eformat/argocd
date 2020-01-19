@@ -10,7 +10,6 @@ spec:
   host: barista-http-quarkus-coffee.apps.foo.sandbox1543.opentlc.com
   port:
     targetPort: 8080-tcp
-  subdomain: ""
   to:
     kind: Service
     name: barista-http

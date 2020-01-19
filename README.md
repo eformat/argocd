@@ -3,23 +3,18 @@
 #### Install from template
 ```
 oc new-project argocd --display-name="ArgoCD" --description="ArgoCD"
-oc apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v1.3.6/manifests/install.yaml
-sudo curl -L  https://github.com/argoproj/argo-cd/releases/download/v1.3.6/argocd-linux-amd64 -o /usr/bin/argocd
+oc apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v1.4.0/manifests/install.yaml
+sudo curl -L  https://github.com/argoproj/argo-cd/releases/download/v1.4.0/argocd-linux-amd64 -o /usr/bin/argocd
 sudo chmod +x /usr/bin/argocd
 oc port-forward svc/argocd-server -n argocd 4443:443 &
 ```
 
-Login locally
+Login locally (or setup SSO below)
 ```
 PSWD=$(oc get pods -n argocd -l app.kubernetes.io/name=argocd-server -o name | cut -d'/' -f 2)
 argocd login localhost:4443 --insecure --username admin --password $PSWD
 argocd account update-password --insecure
 argocd relogin
-```
-
-Create Route
-```
-oc create route passthrough argocd --service=argocd-server --port=https --insecure-policy=Redirect
 ```
 
 #### Install from operator
@@ -67,8 +62,13 @@ oc get installplan --all-namespaces
 
 - https://blog.openshift.com/openshift-authentication-integration-with-argocd/
 
+Create Route
 ```
--- hacks
+oc create route passthrough argocd --service=argocd-server --port=https --insecure-policy=Redirect
+```
+
+Hacks
+```
 oc patch deployment argocd-dex-server \
   -p '{"spec": {"template": {"spec": {"containers": [{"name": "dex","image": "quay.io/ablock/dex:openshift-connector"}]}}}}'
 
@@ -84,13 +84,15 @@ oc edit deployment argocd-server
         - 'http://argocd-dex-server:5556'
 
 --
-oc serviceaccounts get-token argocd-dex-server
-oc annotate sa/argocd-dex-server serviceaccounts.openshift.io/oauth-redirecturi.argocd=https://argocd-argocd.apps.foo.sandbox925.opentlc.com/api/dex/callback --overwrite
+API=$(oc whoami --show-server)
+TOKEN=$(oc serviceaccounts get-token argocd-dex-server)
+HOST=$(oc get route argocd --template='{{ .spec.host }}')
+oc annotate sa/argocd-dex-server serviceaccounts.openshift.io/oauth-redirecturi.argocd=https://$HOST/api/dex/callback --overwrite
 
 oc edit cm argocd-cm -n argocd
 
 data:
-  url: https://example-argocd-server-argocd.apps.foo.sandbox925.opentlc.com
+  url: https://$HOST
   dex.config: |
     connectors:
       # OpenShift
@@ -98,10 +100,10 @@ data:
         id: openshift
         name: OpenShift
         config:
-          issuer: https://api.foo.sandbox925.opentlc.com:6443
+          issuer: $API
           clientID: system:serviceaccount:argocd:argocd-dex-server
-          clientSecret: <token from above>
-          redirectURI: https://argocd-argocd.apps.foo.sandbox925.opentlc.com/api/dex/callback
+          clientSecret: $TOKEN
+          redirectURI: https://$HOST/api/dex/callback
           insecureCA: true
 ```
 
@@ -115,9 +117,13 @@ data:
   policy.default: role:admin
 ```
 
+Restart server pod if not operator
+```
+oc delete pod argocd-server-7f8cbd865f-t6xbg
+```
+
 Login sso
 ```
-HOST=$(oc get route argocd --template='{{ .spec.host }}')
 argocd login $HOST:443 --sso --insecure --username admin
 ```
 
@@ -175,7 +181,9 @@ argocd app create amq-streams \
   --repo git@github.com:eformat/argocd.git \
   --path amq-streams \
   --dest-server https://kubernetes.default.svc \
-  --dest-namespace amq-streams
+  --dest-namespace amq-streams \
+  --revision master \
+  --sync-policy automated
 
 argocd app get amq-streams
 argocd app sync amq-streams --prune
@@ -190,7 +198,9 @@ argocd app create nexus \
   --repo git@github.com:eformat/argocd.git \
   --path nexus \
   --dest-server https://kubernetes.default.svc \
-  --dest-namespace nexus
+  --dest-namespace nexus \
+  --revision master \
+  --sync-policy automated
 
 argocd app get nexus
 argocd app sync nexus --prune
@@ -205,7 +215,9 @@ argocd app create tekton \
   --repo git@github.com:eformat/argocd.git \
   --path tekton \
   --dest-server https://kubernetes.default.svc \
-  --dest-namespace openshift-operators
+  --dest-namespace openshift-operators \
+  --revision master \
+  --sync-policy automated
 
 argocd app get tekton
 argocd app sync tekton --prune
@@ -222,17 +234,43 @@ argocd app create quarkus-coffeeshop-demo \
   --repo git@github.com:eformat/argocd.git \
   --path quarkus-coffeeshop-demo \
   --dest-server https://kubernetes.default.svc \
-  --dest-namespace quarkus-coffee
+  --dest-namespace quarkus-coffee \
+  --revision master \
+  --sync-policy automated
 
 argocd app get quarkus-coffeeshop-demo
 argocd app sync quarkus-coffeeshop-demo --prune
 #
 argocd app delete quarkus-coffeeshop-demo
 ```
+
+Build image using tekton (not part of argo)
 ```
 oc -n quarkus-coffee create serviceaccount pipeline
 oc -n quarkus-coffee adm policy add-scc-to-user privileged -z pipeline
 oc -n quarkus-coffee adm policy add-role-to-user edit -z pipeline
+
+cat <<EOF | oc create -n quarkus-coffee -f -
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineRun
+metadata:
+  generateName: quarkus-coffeeshop-demo-deploy-pipelinerun-
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false  
+    argocd.argoproj.io/compare-options: IgnoreExtraneous  
+spec:
+  timeout: '20m'
+  pipelineRef:
+    name: deploy-pipeline
+  serviceAccountName: 'pipeline'
+  resources:
+  - name: app-git
+    resourceRef:
+      name: quarkus-coffeeshop-git
+  - name: app-image
+    resourceRef:
+      name: quarkus-coffeeshop-image
+EOF
 ```
 
 `welcome`
@@ -240,9 +278,11 @@ oc -n quarkus-coffee adm policy add-role-to-user edit -z pipeline
 argocd repo add git@github.com:eformat/welcome.git --ssh-private-key-path ~/.ssh/id_rsa
 argocd app create welcome \
   --repo git@github.com:eformat/welcome.git \
-  --path argocd \
+  --path argocd/overlays/cluster1 \
   --dest-server https://kubernetes.default.svc \
-  --dest-namespace welcome
+  --dest-namespace welcome \
+  --revision master \
+  --sync-policy automated
 
 argocd app get welcome
 argocd app sync welcome --prune

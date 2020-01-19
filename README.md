@@ -259,7 +259,7 @@ metadata:
     argocd.argoproj.io/sync-options: Prune=false  
     argocd.argoproj.io/compare-options: IgnoreExtraneous  
 spec:
-  timeout: '20m'
+  timeout: '30m'
   pipelineRef:
     name: deploy-pipeline
   serviceAccountName: 'pipeline'

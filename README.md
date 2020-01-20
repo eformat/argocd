@@ -235,8 +235,9 @@ argocd app create quarkus-coffeeshop-demo \
   --path quarkus-coffeeshop-demo \
   --dest-server https://kubernetes.default.svc \
   --dest-namespace quarkus-coffee \
-  --revision master \
-  --sync-policy automated
+  --revision master
+
+#  --sync-policy automated
 
 argocd app get quarkus-coffeeshop-demo
 argocd app sync quarkus-coffeeshop-demo --prune

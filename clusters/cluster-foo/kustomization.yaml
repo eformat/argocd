@@ -2,5 +2,4 @@ resources:
 - ../base
 - htpasswdidp-secret.yml
 - ca-config-map.yml
-patchStrategicMerge:
 - oauth.yml

@@ -1,0 +1,12 @@
+apiVersion: config.openshift.io/v1
+kind: OAuth
+metadata:
+  name: cluster
+  namespace: openshift-config
+spec:
+  identityProviders:
+  - name: htpassidp
+    type: HTPasswd
+    htpasswd:
+      fileData:
+        name: htpasswdidp-secret

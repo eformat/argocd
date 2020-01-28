@@ -85,8 +85,8 @@ oc edit deployment argocd-server
 
 --
 API=$(oc whoami --show-server)
-TOKEN=$(oc serviceaccounts get-token argocd-dex-server)
-HOST=$(oc get route argocd --template='{{ .spec.host }}')
+TOKEN=$(oc serviceaccounts get-token argocd-dex-server -n argocd)
+HOST=$(oc get route argocd -n argocd --template='{{ .spec.host }}')
 oc annotate sa/argocd-dex-server serviceaccounts.openshift.io/oauth-redirecturi.argocd=https://$HOST/api/dex/callback --overwrite
 
 oc edit cm argocd-cm -n argocd
@@ -197,6 +197,11 @@ Backup cluster secret - Not safe for git !
 ```
 oc get secret -n kube-system -l sealedsecrets.bitnami.com/sealed-secrets-key=active -o yaml > ~/tmp/sealed-secret-master.key
 ```
+(new cluster) Replace new secret install with existing key
+```
+oc replace -f ~/tmp/sealed-secret-master.key
+oc delete pod -n kube-system -l name=sealed-secrets-controller
+```
 
 `kubeseal` Client for generating secrets
 ```
@@ -213,6 +218,9 @@ oc new-project foobar
 oc create secret generic mysecret --dry-run --from-literal=foo=bar -o yaml > ~/tmp/mysecret.yml
 kubeseal < ~/tmp/mysecret.yml > ~/tmp/mysealedsecret.yml
 oc apply -f ~/tmp/mysealedsecret.yml # This file is safe for git!
+# Profit
+oc get secret mysecret -o yaml
+oc get sealedsecret.bitnami.com/mysecret -o yaml
 ```
 
 ### Cluster Configuration

@@ -2,4 +2,11 @@ resources:
 - ../base
 - htpasswdidp-secret.yml
 - ca-config-map.yml
-- oauth.yml
+patchesJson6902:
+- target:
+    group: config.openshift.io
+    version: v1
+    kind: OAuth
+    name: cluster
+    namespace: openshift-config
+  path: oauth.yml

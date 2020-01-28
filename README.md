@@ -129,7 +129,7 @@ argocd login $HOST:443 --sso --insecure --username admin
 
 TIP: argocd route - `CERT INVALID ERROR` - in google chrome type 'thisisunsafe' to skip
 
-#### Configure
+#### Configure ArgoCD Sync
 
 Ignore openshift differences that dont sync.
 
@@ -171,6 +171,53 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-options: Validate=false
 ```
+
+### Sealed Secrets
+
+- https://github.com/bitnami-labs/sealed-secrets
+
+`bitnami sealed-secrets`
+```
+argocd repo add git@github.com:eformat/argocd.git --ssh-private-key-path ~/.ssh/id_rsa
+argocd app create sealed-secrets \
+  --repo git@github.com:eformat/argocd.git \
+  --path sealed-secrets \
+  --dest-server https://kubernetes.default.svc \
+  --dest-namespace kube-system \
+  --revision master \
+  --sync-policy automated
+
+argocd app get sealed-secrets
+argocd app sync sealed-secrets --prune
+#
+argocd app delete sealed-secrets
+```
+
+Backup cluster secret - Not safe for git !
+```
+oc get secret -n kube-system -l sealedsecrets.bitnami.com/sealed-secrets-key=active -o yaml > ~/tmp/sealed-secret-master.key
+```
+
+`kubeseal` Client for generating secrets
+```
+release=$(curl --silent "https://api.github.com/repos/bitnami-labs/sealed-secrets/releases/latest" | sed -n 's/.*"tag_name": *"\([^"]*\)".*/\1/p')
+GOOS=$(go env GOOS)
+GOARCH=$(go env GOARCH)
+wget https://github.com/bitnami-labs/sealed-secrets/releases/download/$release/kubeseal-$GOOS-$GOARCH
+sudo install -m 755 kubeseal-$GOOS-$GOARCH /usr/local/bin/kubeseal
+```
+
+Test
+```
+oc new-project foobar
+oc create secret generic mysecret --dry-run --from-literal=foo=bar -o yaml > ~/tmp/mysecret.yml
+kubeseal < ~/tmp/mysecret.yml > ~/tmp/mysealedsecret.yml
+oc apply -f ~/tmp/mysealedsecret.yml # This file is safe for git!
+```
+
+### Cluster Configuration
+
+
 
 ### Infrastructure Applications
 

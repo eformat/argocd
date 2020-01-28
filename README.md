@@ -225,7 +225,24 @@ oc get sealedsecret.bitnami.com/mysecret -o yaml
 
 ### Cluster Configuration
 
+Pre-requisites: install `sealed-secrets`
 
+`cluser-foo`
+```
+argocd repo add git@github.com:eformat/argocd.git --ssh-private-key-path ~/.ssh/id_rsa
+argocd app create cluster-foo \
+  --repo git@github.com:eformat/argocd.git \
+  --path clusters/cluster-foo \
+  --dest-server https://kubernetes.default.svc \
+  --dest-namespace openshift-config \
+  --revision master \
+  --sync-policy automated
+
+argocd app get cluster-foo
+argocd app sync cluster-foo --prune
+#
+argocd app delete cluster-foo
+```
 
 ### Infrastructure Applications
 

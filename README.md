@@ -297,6 +297,23 @@ argocd app sync tekton --prune
 argocd app delete tekton
 ```
 
+`crw`
+```
+argocd repo add git@github.com:eformat/argocd.git --ssh-private-key-path ~/.ssh/id_rsa
+argocd app create crw \
+  --repo git@github.com:eformat/argocd.git \
+  --path crw \
+  --dest-server https://kubernetes.default.svc \
+  --dest-namespace crw \
+  --revision master \
+  --sync-policy automated
+
+argocd app get crw
+argocd app sync crw --prune
+#
+argocd app delete crw
+```
+
 ### Applications
 
 `quarkus-coffe-demo`

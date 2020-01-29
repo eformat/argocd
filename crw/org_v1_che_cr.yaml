@@ -23,6 +23,8 @@ spec:
     cheImage: ''
     # tag of an image used in Che deployment
     cheImageTag: ''
+    # set default image pull policy
+    cheImagePullPolicy: 'Always'
     # image:tag used in Devfile registry deployment
     devfileRegistryImage: ''
     # image:tag used in plugin registry deployment

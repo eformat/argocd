@@ -149,6 +149,12 @@ data:
         jsonPointers:
         - /spec/triggers
         - /status
+    org.eclipse.che/CheCluster:
+      ignoreDifferences: |
+        jsonPointers:
+        - /spec
+
+oc delete pod -l app.kubernetes.io/name=argocd-server -n argocd
 ```
 
 ### Extraneous ignores
@@ -312,6 +318,8 @@ argocd app get crw
 argocd app sync crw --prune
 #
 argocd app delete crw
+
+oc patch checluster.org.eclipse.che codeready-workspaces -n crw --type='json' -p='[{"op": "replace", "path": "/metadata/finalizers", "value":[]}]'
 ```
 
 ### Applications

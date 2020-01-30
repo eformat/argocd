@@ -1,0 +1,12 @@
+apiVersion: project.openshift.io/v1
+kind: Project
+metadata:
+  annotations:
+    openshift.io/description: "keycloak"
+    openshift.io/display-name: "keycloak"
+  name: keycloak
+  labels:
+    app.kubernetes.io/instance: keycloak
+spec:
+  finalizers:
+  - kubernetes

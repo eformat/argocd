@@ -1,10 +1,13 @@
 # argocd
 
+Latest Release
+- https://github.com/argoproj/argo-cd/releases
+
 #### Install from template
 ```
 oc new-project argocd --display-name="ArgoCD" --description="ArgoCD"
-oc apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v1.4.0/manifests/install.yaml
-sudo curl -L  https://github.com/argoproj/argo-cd/releases/download/v1.4.0/argocd-linux-amd64 -o /usr/bin/argocd
+oc apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v1.4.2/manifests/install.yaml
+sudo curl -L  https://github.com/argoproj/argo-cd/releases/download/v1.4.2/argocd-linux-amd64 -o /usr/bin/argocd
 sudo chmod +x /usr/bin/argocd
 oc port-forward svc/argocd-server -n argocd 4443:443 &
 ```
@@ -320,6 +323,26 @@ argocd app sync crw --prune
 argocd app delete crw
 
 oc patch checluster.org.eclipse.che codeready-workspaces -n crw --type='json' -p='[{"op": "replace", "path": "/metadata/finalizers", "value":[]}]'
+```
+
+`keycloak`
+```
+argocd repo add git@github.com:eformat/argocd.git --ssh-private-key-path ~/.ssh/id_rsa
+argocd app create keycloak \
+  --repo git@github.com:eformat/argocd.git \
+  --path keycloak \
+  --dest-server https://kubernetes.default.svc \
+  --dest-namespace keycloak \
+  --revision master \
+  --sync-policy automated
+
+argocd app get keycloak
+argocd app sync keycloak --prune
+#
+argocd app delete keycloak
+
+# fixme reecnrypt route has private key, so keep separate for now
+oc apply -f ./keycloak/route.yml
 ```
 
 ### Applications

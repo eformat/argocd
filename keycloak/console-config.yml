@@ -6,5 +6,5 @@ metadata:
   name: cluster
 spec:
   authentication:
-    logoutRedirect: https://keycloak-keycloak.apps.foo.sandbox1543.opentlc.com/auth/realms/OpenShift/protocol/openid-connect/logout?redirect_uri=https://console-openshift-console.apps.foo.sandbox1543.opentlc.com/
+    logoutRedirect: https://keycloak-keycloak.apps.foo.sandbox1459.opentlc.com/auth/realms/OpenShift/protocol/openid-connect/logout?redirect_uri=https://console-openshift-console.apps.foo.sandbox1459.opentlc.com/
 status: {}

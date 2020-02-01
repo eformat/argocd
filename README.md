@@ -213,6 +213,7 @@ oc get secret -n kube-system -l sealedsecrets.bitnami.com/sealed-secrets-key=act
 ```
 (new cluster) Replace new secret install with existing key
 ```
+# eidt secert name
 oc replace -f ~/tmp/sealed-secret-master.key
 oc delete pod -n kube-system -l name=sealed-secrets-controller
 ```
@@ -327,6 +328,7 @@ argocd app sync crw --prune
 #
 argocd app delete crw
 
+# delete may hang
 oc patch checluster.org.eclipse.che codeready-workspaces -n crw --type='json' -p='[{"op": "replace", "path": "/metadata/finalizers", "value":[]}]'
 ```
 

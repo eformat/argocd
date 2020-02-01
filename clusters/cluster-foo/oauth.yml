@@ -17,5 +17,5 @@
       clientSecret:
         name: idp-secret
       extraScopes: []
-      issuer: https://keycloak-keycloak.apps.foo.sandbox1543.opentlc.com/auth/realms/OpenShift
+      issuer: https://keycloak-keycloak.apps.foo.sandbox1459.opentlc.com/auth/realms/OpenShift
     type: OpenID

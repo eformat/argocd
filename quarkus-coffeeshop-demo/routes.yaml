@@ -7,7 +7,7 @@ metadata:
   name: barista-http
   namespace: quarkus-coffee
 spec:
-  host: barista-http-quarkus-coffee.apps.foo.sandbox1543.opentlc.com
+  host: barista-http-quarkus-coffee.apps.foo.sandbox1459.opentlc.com
   port:
     targetPort: 8080-tcp
   to:
@@ -29,7 +29,7 @@ metadata:
   name: barista-kafka-julie
   namespace: quarkus-coffee
 spec:
-  host: barista-kafka-julie-quarkus-coffee.apps.foo.sandbox1543.opentlc.com
+  host: barista-kafka-julie-quarkus-coffee.apps.foo.sandbox1459.opentlc.com
   port:
     targetPort: 8080-tcp
   to:
@@ -51,7 +51,7 @@ metadata:
   name: barista-kafka-tom
   namespace: quarkus-coffee
 spec:
-  host: barista-kafka-tom-quarkus-coffee.apps.foo.sandbox1543.opentlc.com
+  host: barista-kafka-tom-quarkus-coffee.apps.foo.sandbox1459.opentlc.com
   port:
     targetPort: 8080-tcp
   to:
@@ -73,7 +73,7 @@ metadata:
   name: coffeeshop-service
   namespace: quarkus-coffee
 spec:
-  host: coffeeshop-service-quarkus-coffee.apps.foo.sandbox1543.opentlc.com
+  host: coffeeshop-service-quarkus-coffee.apps.foo.sandbox1459.opentlc.com
   port:
     targetPort: 8080-tcp
   to:

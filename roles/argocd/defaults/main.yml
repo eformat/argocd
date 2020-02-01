@@ -1,0 +1,4 @@
+---
+# defaults file for argocd
+_argocd_project_display: "ArgoCD"
+_argocd_project_description: "ArgoCD"

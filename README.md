@@ -3,6 +3,11 @@
 Latest Release
 - https://github.com/argoproj/argo-cd/releases
 
+### Install from ansible
+```
+ansible-playbook -i inventory install.yml -e argocd_install=true --vault-password-file=~/.vault_pass.txt
+```
+
 #### Install from template
 ```
 oc new-project argocd --display-name="ArgoCD" --description="ArgoCD"

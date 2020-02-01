@@ -1,0 +1,17 @@
+[all:vars]
+admin_pwd=password
+
+[argocd]
+localhost ansible_connection=local
+
+[argocd:vars]
+ocp_api_url=https://api.foo.cluster.example.com:6443
+ocp_apps_domain="apps.foo.cluster.example.com"
+argocd_project_name="argocd"
+argocd_version=1.4.2
+dex_version=2.21.0
+redis_version=5.0.3
+
+[remote]
+
+[remote:vars]

@@ -1,0 +1,46 @@
+---
+# tasks file for argocd
+- name: OpenShift Login Admin
+  command: >-
+    oc login -u admin -p {{ admin_pwd }} {{ ocp_api_url }} --insecure-skip-tls-verify=true
+  ignore_errors: no
+
+- name: Create Argocd Project
+  k8s_raw:
+    state: present
+    definition: "{{ lookup('template', 'project.j2') | from_yaml }}"
+
+- name: Create Argocd Application
+  script: install.sh "{{ argocd_project_name }}" "{{ argocd_version }}" "{{ dex_version }}" "{{ redis_version }}"
+  register: cmd
+  failed_when: "cmd.rc != 0"
+
+  # k8s_raw:
+  #   sate: present
+  #   src: "{{ item }}"
+  #   namespace: "{{ argocd_project_name }}"
+  # loop: "{{ lookup('template', 'install.j2') | from_yaml_all | list }}"
+
+- name: SSO configure access
+  script: sso.sh "{{ argocd_project_name }}"
+  register: cmd
+  failed_when: "cmd.rc != 0"
+
+- name: Create Argocd Route
+  k8s_raw:
+    state: present
+    definition: "{{ lookup('template', 'route.j2') | from_yaml }}"
+
+- name: Wait for Argocd to be running
+  k8s_info:
+    api_version: apps/v1
+    kind: Deployment
+    namespace: "{{ argocd_project_name }}"
+    name: argocd-server
+  register: deploy
+#- debug: var=deploy.resources[0].status
+  retries: 60
+  delay: 10
+  until:
+    - deploy.resources[0].status.availableReplicas is defined
+    - deploy.resources[0].status.availableReplicas | int == 1

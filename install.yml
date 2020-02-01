@@ -1,0 +1,7 @@
+---
+- name: Install Argocd
+  hosts: argocd
+  tasks:
+    - import_role:  
+        name: argocd
+      when: argocd_install == 'true'

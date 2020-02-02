@@ -7,7 +7,6 @@ spec:
   identityProviders:
   - name: htpassidp
     type: HTPasswd
-    challenge: true
     htpasswd:
       fileData:
         name: htpasswdidp-secret

@@ -2,8 +2,7 @@
   path: /spec/identityProviders/1
   value:
     mappingMethod: claim
-    name: keycloak
-    challenge: true
+    name: keycloak    
     openID:
       ca:
         name: ca-config-map

@@ -3,6 +3,7 @@
   value:
     mappingMethod: claim
     name: keycloak
+    challenge: true
     openID:
       ca:
         name: ca-config-map

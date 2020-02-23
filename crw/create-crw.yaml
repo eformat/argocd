@@ -5,6 +5,7 @@ metadata:
   annotations:
     openshift.io/description: "CRW"
     openshift.io/display-name: "CRW"
+    argocd.argoproj.io/sync-wave: "-1"
   name: crw
 spec:
   finalizers:

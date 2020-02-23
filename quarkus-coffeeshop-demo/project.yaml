@@ -4,6 +4,7 @@ metadata:
   annotations:
     openshift.io/description: "Quarkus Coffee Shop"
     openshift.io/display-name: "Quarkus Coffee Shop"
+    argocd.argoproj.io/sync-wave: "-1"
   name: quarkus-coffee
   labels:
     app.kubernetes.io/instance: quarkus-coffee

@@ -4,6 +4,7 @@ metadata:
   annotations:
     openshift.io/description: "nexus"
     openshift.io/display-name: "nexus"
+    argocd.argoproj.io/sync-wave: "-1"
   name: nexus
   labels:
     app.kubernetes.io/instance: nexus

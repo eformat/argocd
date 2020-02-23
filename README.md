@@ -186,6 +186,15 @@ metadata:
     argocd.argoproj.io/sync-options: Validate=false
 ```
 
+### Sync Projects / Namespaces First
+
+```
+metadata:
+  name: my-project
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+```
+
 ### Sealed Secrets
 
 - https://github.com/bitnami-labs/sealed-secrets
@@ -213,7 +222,7 @@ oc get secret -n kube-system -l sealedsecrets.bitnami.com/sealed-secrets-key=act
 ```
 (new cluster) Replace new secret install with existing key
 ```
-# eidt secert name
+# edit secert name
 oc replace -f ~/tmp/sealed-secret-master.key
 oc delete pod -n kube-system -l name=sealed-secrets-controller
 ```
@@ -257,6 +266,12 @@ argocd app get cluster-foo
 argocd app sync cluster-foo --prune
 #
 argocd app delete cluster-foo
+```
+
+```
+# FIXME move to bitnami sealed secret
+# from keycloak ocp-console client
+oc create secret generic idp-secret --from-literal=clientSecret=<ocp-console keycloak client secret> -n openshift-config
 ```
 
 ### Infrastructure Applications
@@ -348,8 +363,8 @@ argocd app sync keycloak --prune
 #
 argocd app delete keycloak
 
-# fixme reecnrypt route has private key, so keep separate for now
-oc apply -f ./keycloak/route.yml
+# FIXME reecnrypt route has private key, so keep separate for now
+~/git/keycloak-utils/keycloak-route.sh
 ```
 
 ### Applications

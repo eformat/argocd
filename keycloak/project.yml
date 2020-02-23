@@ -4,6 +4,7 @@ metadata:
   annotations:
     openshift.io/description: "keycloak"
     openshift.io/display-name: "keycloak"
+    argocd.argoproj.io/sync-wave: "-1"
   name: keycloak
   labels:
     app.kubernetes.io/instance: keycloak

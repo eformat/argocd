@@ -1,8 +1,4 @@
 resources:
 - ../base
 - htpasswdidp-secret.yml
-patches:
-- path: node-labels.yml
-  target:
-    kind: Node
-    labelSelector: failure-domain.beta.kubernetes.io/zone=ap-southeast-2a,node-role.kubernetes.io/worker=
+- node-labels.yml

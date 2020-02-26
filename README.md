@@ -99,6 +99,7 @@ oc annotate sa/argocd-dex-server serviceaccounts.openshift.io/oauth-redirecturi.
 
 oc edit cm argocd-cm -n argocd
 
+cat <<EOF > ~/tmp/argocd-cm.yaml
 data:
   url: https://$HOST
   dex.config: |
@@ -113,6 +114,7 @@ data:
           clientSecret: $TOKEN
           redirectURI: https://$HOST/api/dex/callback
           insecureCA: true
+EOF
 ```
 
 Add default policy as `role:admin`
@@ -127,7 +129,7 @@ data:
 
 Restart server pod if not operator
 ```
-oc delete pod argocd-server-7f8cbd865f-t6xbg
+oc delete pod -l app.kubernetes.io/name=argocd-server
 ```
 
 Login sso

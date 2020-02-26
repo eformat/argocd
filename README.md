@@ -270,6 +270,23 @@ argocd app sync cluster-foo --prune
 argocd app delete cluster-foo
 ```
 
+`cluser-bar`
+```
+argocd repo add git@github.com:eformat/argocd.git --ssh-private-key-path ~/.ssh/id_rsa
+argocd app create cluster-bar \
+  --repo git@github.com:eformat/argocd.git \
+  --path clusters/cluster-bar \
+  --dest-server https://kubernetes.default.svc \
+  --dest-namespace openshift-config \
+  --revision master \
+  --sync-policy automated
+
+argocd app get cluster-bar
+argocd app sync cluster-bar --prune
+#
+argocd app delete cluster-bar
+```
+
 ```
 # FIXME move to bitnami sealed secret
 # from keycloak ocp-console client

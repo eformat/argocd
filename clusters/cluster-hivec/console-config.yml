@@ -1,0 +1,10 @@
+apiVersion: config.openshift.io/v1
+kind: Console
+metadata:
+  annotations:
+    release.openshift.io/create-only: "true"
+  name: cluster
+spec:
+  authentication:
+    logoutRedirect: https://keycloak-keycloak.apps.hivec.sandbox526.opentlc.com/auth/realms/OpenShift/protocol/openid-connect/logout?redirect_uri=https://console-openshift-console.apps.hivec.sandbox526.opentlc.com/
+status: {}

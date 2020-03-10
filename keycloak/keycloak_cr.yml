@@ -3,6 +3,7 @@ kind: Keycloak
 metadata:
   labels:
     app: sso
+    app.kubernetes.io/instance: keycloak
   name: example-keycloak
   namespace: keycloak
 spec:

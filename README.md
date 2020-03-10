@@ -253,7 +253,7 @@ oc get sealedsecret.bitnami.com/mysecret -o yaml
 
 Pre-requisites: install `sealed-secrets`
 
-`cluser-foo`
+`cluster-foo`
 ```
 argocd repo add git@github.com:eformat/argocd.git --ssh-private-key-path ~/.ssh/id_rsa
 argocd app create cluster-foo \
@@ -270,7 +270,7 @@ argocd app sync cluster-foo --prune
 argocd app delete cluster-foo
 ```
 
-`cluser-bar`
+`cluster-bar`
 ```
 argocd repo add git@github.com:eformat/argocd.git --ssh-private-key-path ~/.ssh/id_rsa
 argocd app create cluster-bar \
@@ -285,6 +285,23 @@ argocd app get cluster-bar
 argocd app sync cluster-bar --prune
 #
 argocd app delete cluster-bar
+```
+
+`cluster-hivec`
+```
+argocd repo add git@github.com:eformat/argocd.git --ssh-private-key-path ~/.ssh/id_rsa
+argocd app create cluster-hivec \
+  --repo git@github.com:eformat/argocd.git \
+  --path clusters/cluster-hivec \
+  --dest-server https://kubernetes.default.svc \
+  --dest-namespace openshift-config \
+  --revision master \
+  --sync-policy automated
+
+argocd app get cluster-hivec
+argocd app sync cluster-hivec --prune
+#
+argocd app delete cluster-hivec
 ```
 
 ```

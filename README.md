@@ -203,9 +203,9 @@ metadata:
 
 `bitnami sealed-secrets`
 ```
-argocd repo add git@github.com:eformat/argocd.git --ssh-private-key-path ~/.ssh/id_rsa
+argocd repo add https://github.com/eformat/argocd.git
 argocd app create sealed-secrets \
-  --repo git@github.com:eformat/argocd.git \
+  --repo https://github.com/eformat/argocd.git \
   --path sealed-secrets \
   --dest-server https://kubernetes.default.svc \
   --dest-namespace kube-system \
@@ -255,9 +255,9 @@ Pre-requisites: install `sealed-secrets`
 
 `cluster-foo`
 ```
-argocd repo add git@github.com:eformat/argocd.git --ssh-private-key-path ~/.ssh/id_rsa
+argocd repo add https://github.com/eformat/argocd.git
 argocd app create cluster-foo \
-  --repo git@github.com:eformat/argocd.git \
+  --repo https://github.com/eformat/argocd.git \
   --path clusters/cluster-foo \
   --dest-server https://kubernetes.default.svc \
   --dest-namespace openshift-config \
@@ -272,9 +272,9 @@ argocd app delete cluster-foo
 
 `cluster-bar`
 ```
-argocd repo add git@github.com:eformat/argocd.git --ssh-private-key-path ~/.ssh/id_rsa
+argocd repo add https://github.com/eformat/argocd.git
 argocd app create cluster-bar \
-  --repo git@github.com:eformat/argocd.git \
+  --repo https://github.com/eformat/argocd.git \
   --path clusters/cluster-bar \
   --dest-server https://kubernetes.default.svc \
   --dest-namespace openshift-config \
@@ -289,9 +289,9 @@ argocd app delete cluster-bar
 
 `cluster-hivec`
 ```
-argocd repo add git@github.com:eformat/argocd.git --ssh-private-key-path ~/.ssh/id_rsa
+argocd repo add https://github.com/eformat/argocd.git
 argocd app create cluster-hivec \
-  --repo git@github.com:eformat/argocd.git \
+  --repo https://github.com/eformat/argocd.git \
   --path clusters/cluster-hivec \
   --dest-server https://kubernetes.default.svc \
   --dest-namespace openshift-config \
@@ -314,9 +314,9 @@ oc create secret generic idp-secret --from-literal=clientSecret=<ocp-console key
 
 `amq-streams operator`
 ```
-argocd repo add git@github.com:eformat/argocd.git --ssh-private-key-path ~/.ssh/id_rsa
+argocd repo add https://github.com/eformat/argocd.git
 argocd app create amq-streams \
-  --repo git@github.com:eformat/argocd.git \
+  --repo https://github.com/eformat/argocd.git \
   --path amq-streams \
   --dest-server https://kubernetes.default.svc \
   --dest-namespace amq-streams \
@@ -331,9 +331,9 @@ argocd app delete amq-streams
 
 `nexus operator`
 ```
-argocd repo add git@github.com:eformat/argocd.git --ssh-private-key-path ~/.ssh/id_rsa
+argocd repo add https://github.com/eformat/argocd.git
 argocd app create nexus \
-  --repo git@github.com:eformat/argocd.git \
+  --repo https://github.com/eformat/argocd.git \
   --path nexus \
   --dest-server https://kubernetes.default.svc \
   --dest-namespace nexus \
@@ -348,9 +348,9 @@ argocd app delete nexus
 
 `tekton`
 ```
-argocd repo add git@github.com:eformat/argocd.git --ssh-private-key-path ~/.ssh/id_rsa
+argocd repo add https://github.com/eformat/argocd.git
 argocd app create tekton \
-  --repo git@github.com:eformat/argocd.git \
+  --repo https://github.com/eformat/argocd.git \
   --path tekton \
   --dest-server https://kubernetes.default.svc \
   --dest-namespace openshift-operators \
@@ -365,9 +365,9 @@ argocd app delete tekton
 
 `crw`
 ```
-argocd repo add git@github.com:eformat/argocd.git --ssh-private-key-path ~/.ssh/id_rsa
+argocd repo add https://github.com/eformat/argocd.git
 argocd app create crw \
-  --repo git@github.com:eformat/argocd.git \
+  --repo https://github.com/eformat/argocd.git \
   --path crw \
   --dest-server https://kubernetes.default.svc \
   --dest-namespace crw \
@@ -385,9 +385,9 @@ oc patch checluster.org.eclipse.che codeready-workspaces -n crw --type='json' -p
 
 `keycloak`
 ```
-argocd repo add git@github.com:eformat/argocd.git --ssh-private-key-path ~/.ssh/id_rsa
+argocd repo add https://github.com/eformat/argocd.git
 argocd app create keycloak \
-  --repo git@github.com:eformat/argocd.git \
+  --repo https://github.com/eformat/argocd.git \
   --path keycloak \
   --dest-server https://kubernetes.default.svc \
   --dest-namespace keycloak \
@@ -407,9 +407,9 @@ argocd app delete keycloak
 
 `quarkus-coffe-demo`
 ```
-argocd repo add git@github.com:eformat/argocd.git --ssh-private-key-path ~/.ssh/id_rsa
+argocd repo add https://github.com/eformat/argocd.git
 argocd app create quarkus-coffeeshop-demo \
-  --repo git@github.com:eformat/argocd.git \
+  --repo https://github.com/eformat/argocd.git \
   --path quarkus-coffeeshop-demo \
   --dest-server https://kubernetes.default.svc \
   --dest-namespace quarkus-coffee \
@@ -454,9 +454,9 @@ EOF
 
 `welcome`
 ```
-argocd repo add git@github.com:eformat/welcome.git --ssh-private-key-path ~/.ssh/id_rsa
+argocd repo add https://github.com/eformat/welcome.git
 argocd app create welcome \
-  --repo git@github.com:eformat/welcome.git \
+  --repo https://github.com/eformat/welcome.git \
   --path argocd/overlays/cluster1 \
   --dest-server https://kubernetes.default.svc \
   --dest-namespace welcome \

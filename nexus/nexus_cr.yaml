@@ -3,6 +3,8 @@ kind: Nexus
 metadata:
   name: nexus
   namespace: nexus
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   image: docker.io/sonatype/nexus3:latest
   networking:

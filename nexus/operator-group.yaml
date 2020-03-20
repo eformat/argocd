@@ -3,6 +3,7 @@ kind: OperatorGroup
 metadata:
   annotations:
     olm.providedAPIs: Nexus.v1alpha1.apps.m88i.io
+    argocd.argoproj.io/sync-wave: "2"
   generateName: nexus-
   name: nexus
   namespace: nexus

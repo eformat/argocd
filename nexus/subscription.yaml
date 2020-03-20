@@ -3,6 +3,7 @@ kind: Subscription
 metadata:
   name: nexus-operator-hub
   namespace: nexus
+  argocd.argoproj.io/sync-wave: "1"
 spec:
   channel: alpha
   installPlanApproval: Automatic

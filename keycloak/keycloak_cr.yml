@@ -5,8 +5,7 @@ metadata:
     app: sso
     app.kubernetes.io/instance: keycloak
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
-    argocd.argoproj.io/sync-options: Validate=false
+    argocd.argoproj.io/sync-wave: "2"    
   name: example-keycloak
   namespace: keycloak
 spec:

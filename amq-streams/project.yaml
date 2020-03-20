@@ -4,7 +4,7 @@ metadata:
   annotations:
     openshift.io/description: "strimzi"
     openshift.io/display-name: "strimzi"
-    argocd.argoproj.io/sync-wave: "-1"
+    argocd.argoproj.io/sync-wave: "0"
   name: strimzi
 spec:
   finalizers:

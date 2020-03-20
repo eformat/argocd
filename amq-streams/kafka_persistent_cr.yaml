@@ -3,6 +3,8 @@ kind: Kafka
 metadata:
   name: my-cluster
   namespace: strimzi
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   kafka:
     version: 2.3.0

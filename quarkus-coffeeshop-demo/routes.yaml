@@ -2,12 +2,14 @@
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
+  annotations:
+    openshift.io/host.generated: "true"
   labels:
     app: barista-http
   name: barista-http
   namespace: quarkus-coffee
 spec:
-  host: barista-http-quarkus-coffee.apps.foo.sandbox1459.opentlc.com
+  host: null
   port:
     targetPort: 8080-tcp
   to:
@@ -24,12 +26,14 @@ status:
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
+  annotations:
+    openshift.io/host.generated: "true"  
   labels:
     app: barista-kafka-julie
   name: barista-kafka-julie
   namespace: quarkus-coffee
 spec:
-  host: barista-kafka-julie-quarkus-coffee.apps.foo.sandbox1459.opentlc.com
+  host: null
   port:
     targetPort: 8080-tcp
   to:
@@ -46,12 +50,14 @@ status:
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
+  annotations:
+    openshift.io/host.generated: "true"  
   labels:
     app: barista-kafka-tom
   name: barista-kafka-tom
   namespace: quarkus-coffee
 spec:
-  host: barista-kafka-tom-quarkus-coffee.apps.foo.sandbox1459.opentlc.com
+  host: null
   port:
     targetPort: 8080-tcp
   to:
@@ -68,12 +74,14 @@ status:
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
+  annotations:
+    openshift.io/host.generated: "true"
   labels:
     app: coffeeshop-service
   name: coffeeshop-service
   namespace: quarkus-coffee
 spec:
-  host: coffeeshop-service-quarkus-coffee.apps.foo.sandbox1459.opentlc.com
+  host: null
   port:
     targetPort: 8080-tcp
   to:

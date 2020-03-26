@@ -11,9 +11,9 @@ ansible-playbook -i inventory install.yml -e argocd_install=true --vault-passwor
 #### Install from template
 ```
 oc new-project argocd --display-name="ArgoCD" --description="ArgoCD"
-oc apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v1.4.2/manifests/install.yaml
-sudo curl -L  https://github.com/argoproj/argo-cd/releases/download/v1.4.2/argocd-linux-amd64 -o /usr/bin/argocd
-sudo chmod +x /usr/bin/argocd
+oc apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v1.5.0-rc1/manifests/install.yaml
+sudo curl -L  https://github.com/argoproj/argo-cd/releases/download/v1.5.0-rc1/argocd-linux-amd64 -o /usr/local/bin/argocd
+sudo chmod +x /usr/local/bin/argocd
 oc port-forward svc/argocd-server -n argocd 4443:443 &
 ```
 
@@ -153,7 +153,9 @@ data:
       ignoreDifferences: |
         jsonPointers:
         - /spec/template/spec/containers/0/image
+        - /spec/triggers/0/imageChangeParams/lastTriggeredImage
         - /spec/triggers/1/imageChangeParams/lastTriggeredImage
+        - /spec/triggers/2/imageChangeParams/lastTriggeredImage
     build.openshift.io/BuildConfig:
       ignoreDifferences: |
         jsonPointers:
@@ -401,6 +403,23 @@ argocd app delete keycloak
 
 # FIXME reecnrypt route has private key, so keep separate for now
 ~/git/keycloak-utils/keycloak-route.sh
+```
+
+`jenkins`
+```
+argocd repo add https://github.com/eformat/charts.git
+argocd app create jenkins \
+  --repo https://github.com/eformat/charts.git \
+  --path jenkins \
+  --dest-server https://kubernetes.default.svc \
+  --dest-namespace jenkins \
+  --revision master \
+  --sync-policy automated
+
+argocd app get jenkins
+argocd app sync jenkins --prune
+#
+argocd app delete jenkins
 ```
 
 ### Applications

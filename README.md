@@ -11,8 +11,8 @@ ansible-playbook -i inventory install.yml -e argocd_install=true --vault-passwor
 #### Install from template
 ```
 oc new-project argocd --display-name="ArgoCD" --description="ArgoCD"
-oc apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v1.5.0-rc1/manifests/install.yaml
-sudo curl -L  https://github.com/argoproj/argo-cd/releases/download/v1.5.0-rc1/argocd-linux-amd64 -o /usr/local/bin/argocd
+oc apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v1.5.0/manifests/install.yaml
+sudo curl -L  https://github.com/argoproj/argo-cd/releases/download/v1.5.0/argocd-linux-amd64 -o /usr/local/bin/argocd
 sudo chmod +x /usr/local/bin/argocd
 oc port-forward svc/argocd-server -n argocd 4443:443 &
 ```
@@ -32,38 +32,101 @@ argocd relogin
 - https://argocd-operator.readthedocs.io/en/latest/guides/install-openshift/
 
 ```
-oc create -f https://raw.githubusercontent.com/argoproj-labs/argocd-operator/master/deploy/service_account.yaml
-oc create -f https://raw.githubusercontent.com/argoproj-labs/argocd-operator/master/deploy/role.yaml
-oc create -f https://raw.githubusercontent.com/argoproj-labs/argocd-operator/master/deploy/role_binding.yaml
+#oc create -f https://raw.githubusercontent.com/argoproj-labs/argocd-operator/master/deploy/service_account.yaml
+#oc create -f https://raw.githubusercontent.com/argoproj-labs/argocd-operator/master/deploy/role.yaml
+#oc create -f https://raw.githubusercontent.com/argoproj-labs/argocd-operator/master/deploy/role_binding.yaml
 
-oc create -f https://raw.githubusercontent.com/argoproj-labs/argocd-operator/master/deploy/argo-cd/argoproj_v1alpha1_application_crd.yaml
-oc create -f https://raw.githubusercontent.com/argoproj-labs/argocd-operator/master/deploy/argo-cd/argoproj_v1alpha1_appproject_crd.yaml
-oc create -f https://raw.githubusercontent.com/argoproj-labs/argocd-operator/master/deploy/crds/argoproj_v1alpha1_argocd_crd.yaml
+#oc create -f https://raw.githubusercontent.com/argoproj-labs/argocd-operator/master/deploy/argo-cd/argoproj.io_applications_crd.yaml
+#oc create -f https://raw.githubusercontent.com/argoproj-labs/argocd-operator/master/deploy/argo-cd/argoproj.io_appprojects_crd.yaml
+#oc create -f https://raw.githubusercontent.com/argoproj-labs/argocd-operator/master/deploy/crds/argoproj.io_argocds_crd.yaml
+#oc create -f https://raw.githubusercontent.com/argoproj-labs/argocd-operator/master/deploy/crds/argoproj.io_argocdexports_crd.yaml
 
-oc create -n openshift-marketplace -f https://raw.githubusercontent.com/argoproj-labs/argocd-operator/master/deploy/catalog_source.yaml
-oc get pods -n openshift-marketplace -l olm.catalogSource=argocd-catalog
+#oc create -n openshift-marketplace -f https://raw.githubusercontent.com/argoproj-labs/argocd-operator/master/deploy/catalog_source.yaml
+#oc get pods -n openshift-marketplace -l olm.catalogSource=argocd-catalog
 
 oc new-project argocd --display-name="ArgoCD" --description="ArgoCD"
-oc create -n argocd -f https://raw.githubusercontent.com/argoproj-labs/argocd-operator/master/deploy/operator_group.yaml
+oc adm policy add-cluster-role-to-user cluster-admin -z argocd-application-controller -n argocd
 
-#oc create -n argocd -f https://raw.githubusercontent.com/argoproj-labs/argocd-operator/master/deploy/subscription.yaml
+oc create -f https://raw.githubusercontent.com/argoproj-labs/argocd-operator/master/deploy/operator_group.yaml
 
 cat <<EOF | oc apply -f -
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
 metadata:
   name: argocd-operator
-  namespace: argocd
 spec:
   channel: alpha
   installPlanApproval: Automatic
   name: argocd-operator
   source: argocd-catalog
   sourceNamespace: openshift-marketplace
-  startingCSV: argocd-operator.v0.0.3
+  startingCSV: argocd-operator.v0.0.5
+EOF
+
+cat <<EOF | oc apply -n argocd -f -
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: prometheus-operator
+spec:
+  channel: beta
+  name: prometheus
+  source: operatorhubio-catalog
+  sourceNamespace: olm
 EOF
 
 oc get installplan --all-namespaces
+
+
+cat <<EOF | oc apply -f-
+apiVersion: argoproj.io/v1alpha1
+kind: ArgoCD
+metadata:
+  name: argocd
+  labels:
+    app: argocd
+spec:
+  dex:
+    config: ""
+    image: quay.io/ablock/dex
+    openShiftOAuth: true
+    version: "openshift-connector"
+  ha:
+    enabled: false
+  grafana:
+    enabled: false
+    route: true
+    size: 1
+  prometheus:
+    enabled: false
+    route: true
+    size: 1
+  rbac:
+    defaultPolicy: role:admin
+  repositories: |
+    - url: https://github.com/rht-labs/ubiquitous-journey.git
+    - type: helm
+      url: https://rht-labs.github.io/helm-charts
+      name: rht-labs
+  insecure: false
+  server:
+    route: true
+  service:
+    type: ClusterIP
+  statusBadgeEnabled: true
+  usersAnonymousEnabled: false
+  version: v1.5.0
+EOF
+```
+
+### Deleting argocd project
+
+If the project hangs when deleting - check CRD's
+
+```
+oc get applications.argoproj.io --all-namespaces
+oc patch applications.argoproj.io jenkins -n argocd --type='json' -p='[{"op": "replace", "path": "/metadata/finalizers", "value":[]}]'
+oc patch applications.argoproj.io welcome -n argocd --type='json' -p='[{"op": "replace", "path": "/metadata/finalizers", "value":[]}]'
 ```
 
 #### SSO
@@ -135,6 +198,7 @@ oc delete pod -l app.kubernetes.io/name=argocd-server
 Login sso
 ```
 argocd login $HOST:443 --sso --insecure --username admin
+argocd login --grpc-web $HOST
 ```
 
 TIP: argocd route - `CERT INVALID ERROR` - in google chrome type 'thisisunsafe' to skip
@@ -370,7 +434,7 @@ argocd app delete tekton
 argocd repo add https://github.com/eformat/argocd.git
 argocd app create crw \
   --repo https://github.com/eformat/argocd.git \
-  --path crw \
+  --path crw/base \
   --dest-server https://kubernetes.default.svc \
   --dest-namespace crw \
   --revision master \
@@ -420,6 +484,40 @@ argocd app get jenkins
 argocd app sync jenkins --prune
 #
 argocd app delete jenkins
+```
+
+`my-jenkins`
+```
+argocd repo add https://github.com/eformat/my-jenkins-chart.git
+argocd app create jenkins \
+  --repo https://github.com/eformat/my-jenkins-chart.git \
+  --path . \
+  --dest-server https://kubernetes.default.svc \
+  --dest-namespace jenkins \
+  --revision master \
+  --sync-policy automated
+
+argocd app get jenkins
+argocd app sync jenkins --prune
+#
+argocd app delete jenkins
+```
+
+`pact-broker`
+```
+argocd repo add https://github.com/eformat/charts.git
+argocd app create pact-broker \
+  --repo https://github.com/eformat/charts.git \
+  --path pact-broker \
+  --dest-server https://kubernetes.default.svc \
+  --dest-namespace pact-broker \
+  --revision master \
+  --sync-policy automated
+
+argocd app get pact-broker
+argocd app sync pact-broker --prune
+#
+argocd app delete pact-broker
 ```
 
 ### Applications

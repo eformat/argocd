@@ -58,25 +58,12 @@ spec:
   channel: alpha
   installPlanApproval: Automatic
   name: argocd-operator
-  source: argocd-catalog
+  source: community-operators
   sourceNamespace: openshift-marketplace
   startingCSV: argocd-operator.v0.0.5
 EOF
 
-cat <<EOF | oc apply -n argocd -f -
-apiVersion: operators.coreos.com/v1alpha1
-kind: Subscription
-metadata:
-  name: prometheus-operator
-spec:
-  channel: beta
-  name: prometheus
-  source: operatorhubio-catalog
-  sourceNamespace: olm
-EOF
-
 oc get installplan --all-namespaces
-
 
 cat <<EOF | oc apply -f-
 apiVersion: argoproj.io/v1alpha1

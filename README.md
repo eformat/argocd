@@ -11,8 +11,8 @@ ansible-playbook -i inventory install.yml -e argocd_install=true --vault-passwor
 #### Install from template
 ```
 oc new-project argocd --display-name="ArgoCD" --description="ArgoCD"
-oc apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v1.5.0/manifests/install.yaml
-sudo curl -L  https://github.com/argoproj/argo-cd/releases/download/v1.5.0/argocd-linux-amd64 -o /usr/local/bin/argocd
+oc apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v1.5.2/manifests/install.yaml
+sudo curl -L  https://github.com/argoproj/argo-cd/releases/download/v1.5.2/argocd-linux-amd64 -o /usr/local/bin/argocd
 sudo chmod +x /usr/local/bin/argocd
 oc port-forward svc/argocd-server -n argocd 4443:443 &
 ```
@@ -102,7 +102,7 @@ spec:
     type: ClusterIP
   statusBadgeEnabled: true
   usersAnonymousEnabled: false
-  version: v1.5.0
+  version: v1.5.2
 EOF
 ```
 
@@ -571,4 +571,9 @@ argocd app get welcome
 argocd app sync welcome --prune
 #
 argocd app delete welcome
+```
+
+`pet-battle-api`
+```
+
 ```

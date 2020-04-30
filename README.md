@@ -75,7 +75,7 @@ metadata:
 spec:
   dex:
     config: ""
-    image: quay.io/ablock/dex
+    image: quay.io/redhat-cop/dex:v2.22.0-openshift
     openShiftOAuth: true
     version: "openshift-connector"
   ha:
@@ -128,7 +128,7 @@ oc create route passthrough argocd --service=argocd-server --port=https --insecu
 Hacks
 ```
 oc patch deployment argocd-dex-server \
-  -p '{"spec": {"template": {"spec": {"containers": [{"name": "dex","image": "quay.io/ablock/dex:openshift-connector"}]}}}}'
+  -p '{"spec": {"template": {"spec": {"containers": [{"name": "dex","image": "quay.io/redhat-cop/dex:v2.22.0-openshift"}]}}}}'
 
 -- if using operator
 -- https://github.com/jmckind/argocd-operator/pull/40/files
@@ -235,7 +235,7 @@ metadata:
 metadata:
   annotations:
     argocd.argoproj.io/sync-options: Prune=false
-
+hub
 metadata:
   annotations:
     argocd.argoproj.io/sync-options: Validate=false

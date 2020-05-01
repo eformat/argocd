@@ -573,7 +573,105 @@ argocd app sync welcome --prune
 argocd app delete welcome
 ```
 
-`pet-battle-api`
-```
+### ArgoCD Multicluster
 
+"one app per cluster, multiple destinations not possible"
+
+- https://github.com/argoproj/argo-cd/issues/1673
+
+Use cases:
+- A single app that has owns resources in different clusters.
+- A single app that is deployed identically (or with small variations) in different clusters.
+
+Posts:
+- https://www.katacoda.com/openshift/courses/introduction/gitops-multicluster
+- https://itnext.io/multicluster-scheduler-argo-workflows-across-kubernetes-clusters-ea98016499ca
+
+```bash
+-- add clusters from kubeconfig
+argocd cluster add default/api-foo-eformat-me:6443/kube:admin
+argocd cluster add default/api-hivec-sandbox1604-opentlc-com:6443/admin
+
+-- list
+argocd cluster list
+
+-- add application repo
+argocd repo add http://github.com/eformat/welcome.git
+argocd repo list
+
+-- can add from cli, but cannot configure things like diff ignores
+#argocd app create --project default --name welcome \
+# --repo http://github.com/eformat/welcome.git \
+# --path argocd/base \
+# --dest-server $(argocd cluster list | grep api-foo-eformat-me | awk '{print $1}') \
+# --dest-namespace welcome \
+# --revision master \
+# --sync-policy automated
+
+-- easier to deploy the CR directly
+-- deploy to on premise cluster
+cat <<EOF | oc apply -f -
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  name: welcome-on-premise
+  namespace: labs-ci-cd
+spec:
+  destination:
+    namespace: welcome
+    server: https://api.foo.eformat.me:6443
+  project: default
+  source:
+    path: argocd/base
+    repoURL: http://github.com/eformat/welcome.git
+    targetRevision: master
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      validate: true
+  ignoreDifferences:
+  - group: apps.openshift.io
+    jsonPointers:
+    - /spec/template/spec/containers/0/image
+    - /spec/triggers/0/imageChangeParams/lastTriggeredImage
+    kind: DeploymentConfig
+EOF
+
+-- deploy to clould cluster
+cat <<EOF | oc apply -f -
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  name: welcome-public-cloud
+  namespace: labs-ci-cd
+spec:
+  destination:
+    namespace: welcome
+    server: https://api.hivec.sandbox1604.opentlc.com:6443
+  project: default
+  source:
+    path: argocd/overlays/cluster1
+    repoURL: http://github.com/eformat/welcome.git
+    targetRevision: master
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      validate: true
+  ignoreDifferences:
+  - group: apps.openshift.io
+    jsonPointers:
+    - /spec/template/spec/containers/0/image
+    - /spec/triggers/0/imageChangeParams/lastTriggeredImage
+    kind: DeploymentConfig
+EOF
+
+-- test the app
+curl -s http://$(oc --context=default/api-hivec-sandbox1604-opentlc-com:6443/admin get route -n welcome)
+curl -s http://$(oc --context=default/api-foo-eformat-me:6443/kube:admin get route -n welcome)
 ```

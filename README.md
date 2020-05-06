@@ -175,6 +175,7 @@ oc edit cm argocd-rbac-cm
 
 data:
   policy.default: role:admin
+  accounts.admin: apiKey
 ```
 
 Restart server pod if not operator

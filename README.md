@@ -11,8 +11,8 @@ ansible-playbook -i inventory install.yml -e argocd_install=true --vault-passwor
 #### Install from template
 ```
 oc new-project argocd --display-name="ArgoCD" --description="ArgoCD"
-oc apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v1.5.4/manifests/install.yaml
-sudo curl -L  https://github.com/argoproj/argo-cd/releases/download/v1.5.4/argocd-linux-amd64 -o /usr/local/bin/argocd
+oc apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v1.5.5/manifests/install.yaml
+sudo curl -L  https://github.com/argoproj/argo-cd/releases/download/v1.5.5/argocd-linux-amd64 -o /usr/local/bin/argocd
 sudo chmod +x /usr/local/bin/argocd
 oc port-forward svc/argocd-server -n argocd 4443:443 &
 ```

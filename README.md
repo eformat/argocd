@@ -274,12 +274,17 @@ argocd app delete sealed-secrets
 
 Backup cluster secret - Not safe for git !
 ```
-oc get secret -n kube-system -l sealedsecrets.bitnami.com/sealed-secrets-key=active -o yaml > ~/tmp/sealed-secret-master.key
+oc get secret -n kube-system -l sealedsecrets.bitnami.com/sealed-secrets-key=active -o yaml > sealed-secret-master.key
 ```
 (new cluster) Replace new secret install with existing key
 ```
-# edit secert name
-oc replace -f ~/tmp/sealed-secret-master.key
+# decrypt master for sealed secrets
+ansible-vault decrypt sealed-secret-master.key --vault-password-file=~/.vault_pass.txt
+# edit secret name
+pod=$(oc -n kube-system get secret -l sealedsecrets.bitnami.com/sealed-secrets-key=active -o name)
+sed -i -e "s|name:.*|name: ${pod##secret/}|" sealed-secret-master.key
+oc replace -f sealed-secret-master.key
+# restart sealedsecret controller pod
 oc delete pod -n kube-system -l name=sealed-secrets-controller
 ```
 

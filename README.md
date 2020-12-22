@@ -11,10 +11,15 @@ ansible-playbook -i inventory install.yml -e argocd_install=true --vault-passwor
 #### Install from template
 ```
 oc new-project argocd --display-name="ArgoCD" --description="ArgoCD"
-oc apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v1.5.5/manifests/install.yaml
-sudo curl -L  https://github.com/argoproj/argo-cd/releases/download/v1.5.5/argocd-linux-amd64 -o /usr/local/bin/argocd
+oc apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v1.8.1/manifests/install.yaml
+sudo curl -L  https://github.com/argoproj/argo-cd/releases/download/v1.8.1/argocd-linux-amd64 -o /usr/local/bin/argocd
 sudo chmod +x /usr/local/bin/argocd
 oc port-forward svc/argocd-server -n argocd 4443:443 &
+```
+
+There is also a nemspaced install version (see below for more details):
+```
+oc apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v1.8.1/manifests/namespace-install.yaml
 ```
 
 Login locally (or setup SSO below)
@@ -545,7 +550,7 @@ kind: PipelineRun
 metadata:
   generateName: quarkus-coffeeshop-demo-deploy-pipelinerun-
   annotations:
-    argocd.argoproj.io/sync-options: Prune=false  
+    argocd.argoproj.io/sync-options: Prune=false
     argocd.argoproj.io/compare-options: IgnoreExtraneous
 spec:
   timeout: '30m'
@@ -680,4 +685,65 @@ EOF
 -- test the app
 curl -s http://$(oc --context=default/api-hivec-sandbox1604-opentlc-com:6443/admin get route -n welcome)
 curl -s http://$(oc --context=default/api-foo-eformat-me:6443/kube:admin get route -n welcome)
+```
+
+
+### Namespaced Mode
+
+The namespaced mode feature was designed to enable managing resources with namespace permissions only. If namespaces are specified in cluster configuration then Argo CD assumes it cannot manage cluster level resources.
+
+You can create a secret for managing cluster connections in argocd, e.g. by using the `argocd-application-controller` token (or create your own service account). The label `argocd.argoproj.io/secret-type: cluster` tells argocd to configure the cluster connection
+
+```
+oc -n labs-ci-cd apply -f - << EOF
+apiVersion: v1
+stringData:
+  config: '{"bearerToken":"$(oc serviceaccounts get-token argocd-application-controller)","tlsClientConfig":{"insecure":true}}'
+  name: argocd-managed
+  namespaces: labs-ci-cd,labs-dev,labs-test,labs-staging,openshift-operators
+  server: https://kubernetes.default.svc
+kind: Secret
+metadata:
+  annotations:
+    managed-by: argocd.argoproj.io
+  labels:
+    argocd.argoproj.io/secret-type: cluster
+  name: cluster-kubernetes.default.svc-argocd-managed
+type: Opaque
+EOF
+```
+
+Check
+```
+$ argocd cluster list
+SERVER                                         NAME            VERSION  STATUS      MESSAGE
+https://kubernetes.default.svc (4 namespaces)  argocd-managed  1.19     Successful  
+
+$ argocd cluster get https://kubernetes.default.svc
+config:
+  tlsClientConfig:
+    insecure: true
+connectionState:
+  attemptedAt: "2020-12-22T22:02:31Z"
+  message: ""
+  status: Successful
+info:
+  applicationsCount: 10
+  cacheInfo:
+    apisCount: 190
+    lastCacheSyncTime: "2020-12-22T22:02:31Z"
+    resourcesCount: 566
+  connectionState:
+    attemptedAt: "2020-12-22T22:02:31Z"
+    message: ""
+    status: Successful
+  serverVersion: "1.19"
+name: argocd-managed
+namespaces:
+- labs-ci-cd
+- labs-dev
+- labs-test
+- labs-staging
+server: https://kubernetes.default.svc
+serverVersion: "1.19"
 ```

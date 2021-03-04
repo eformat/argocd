@@ -5,6 +5,7 @@ metadata:
   name: microcksinstall
   annotations:
     argocd.argoproj.io/sync-wave: "5"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
   name: microcksinstall
   version: 1.2.0

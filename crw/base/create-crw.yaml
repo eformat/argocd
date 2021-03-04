@@ -6,6 +6,7 @@ metadata:
     openshift.io/description: "CRW"
     openshift.io/display-name: "CRW"
     argocd.argoproj.io/sync-wave: "0"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
   name: crw
 spec:
   finalizers:

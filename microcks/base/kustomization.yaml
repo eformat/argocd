@@ -1,0 +1,6 @@
+namespace: microcks
+
+resources:
+- namespace.yaml
+- create-microcks.yaml
+- subscription.yaml

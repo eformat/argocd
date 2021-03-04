@@ -1,0 +1,22 @@
+---
+apiVersion: microcks.github.io/v1alpha1
+kind: MicrocksInstall
+metadata:
+  name: microcksinstall
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  name: microcksinstall
+  version: 1.2.0
+  microcks:
+    replicas: 1
+  postman:
+    replicas: 1
+  keycloak:
+    install: true
+    persistent: true
+    volumeSize: 1Gi
+  mongodb:
+    install: true
+    persistent: true
+    volumeSize: 2Gi

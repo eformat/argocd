@@ -1,0 +1,13 @@
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: microcks
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  channel: stable
+  installPlanApproval: Automatic
+  name: microcks
+  source: community-operators
+  sourceNamespace: openshift-marketplace

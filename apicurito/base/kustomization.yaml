@@ -5,3 +5,11 @@ resources:
 - operatorgroup.yaml
 - create-apicurito.yaml
 - subscription.yaml
+
+patchesJson6902:
+- target:
+    group: route.openshift.io
+    version: v1
+    kind: Route
+    name: apicurito-service
+  path: tls-route.yml

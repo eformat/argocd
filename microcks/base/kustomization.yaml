@@ -2,5 +2,6 @@ namespace: microcks
 
 resources:
 - namespace.yaml
+- operatorgroup.yaml
 - create-microcks.yaml
 - subscription.yaml

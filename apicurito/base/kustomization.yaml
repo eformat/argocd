@@ -1,0 +1,7 @@
+namespace: apicurito
+
+resources:
+- namespace.yaml
+- operatorgroup.yaml
+- create-apicurito.yaml
+- subscription.yaml

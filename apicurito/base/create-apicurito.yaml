@@ -1,0 +1,10 @@
+---
+apiVersion: apicur.io/v1alpha1
+kind: Apicurito
+metadata:
+  name: apicurito-service
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  size: 2
+  image: 'apicurio/apicurito-ui:latest'

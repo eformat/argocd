@@ -1,0 +1,12 @@
+---
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  annotations:
+    olm.providedAPIs: Apicurito.v1alpha1.apicur.io
+    argocd.argoproj.io/sync-wave: "0"
+  generateName: apicurito-
+  name: apicurito-rvg59
+spec:
+  targetNamespaces:
+  - apicurito

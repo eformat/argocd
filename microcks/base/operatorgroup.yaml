@@ -3,7 +3,7 @@ apiVersion: operators.coreos.com/v1
 kind: OperatorGroup
 metadata:
   annotations:
-    olm.providedAPIs: MicrocksInstall.v1alpha1.microcks.github.io
+    olm.providedAPIs: ""
     argocd.argoproj.io/sync-wave: "0"
   generateName: microcks-
   name: microcks-c922m

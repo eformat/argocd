@@ -1,0 +1,21 @@
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: apicurio-studio-api
+spec:
+  host: apicurio-studio-api.apps.cluster.dev.com
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: apicurio-studio-ws
+spec:
+  host: apicurio-studio-ws.apps.cluster.dev.com
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: apicurio-studio-ui
+spec:
+  host: apicurio-studio.apps.cluster.dev.com

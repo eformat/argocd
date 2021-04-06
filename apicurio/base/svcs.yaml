@@ -1,0 +1,105 @@
+---
+  apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: postgresql
+      template: apicurio-studio
+    name: postgresql
+  spec:
+    ports:
+    - name: postgresql
+      port: 5432
+      protocol: TCP
+      targetPort: 5432
+    selector:
+      name: postgresql
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+---
+  apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: apicurio-studio-auth
+      template: apicurio-studio
+    name: apicurio-studio-auth
+  spec:
+    ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      app: apicurio-studio-auth
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+---
+  apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      prometheus.io/path: /system/metrics
+      prometheus.io/scrape: "true"
+    labels:
+      app: apicurio-studio-api
+      template: apicurio-studio
+    name: apicurio-studio-api
+  spec:
+    ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      app: apicurio-studio-api
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+---
+  apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      prometheus.io/path: /metrics
+      prometheus.io/scrape: "true"
+    labels:
+      app: apicurio-studio-ws
+      template: apicurio-studio
+    name: apicurio-studio-ws
+  spec:
+    ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      app: apicurio-studio-ws
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+---
+  apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: apicurio-studio-ui
+      template: apicurio-studio
+    name: apicurio-studio-ui
+  spec:
+    ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      app: apicurio-studio-ui
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}

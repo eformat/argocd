@@ -1,0 +1,12 @@
+
+resources:
+- imagestreams.yaml
+- postgres-dc.yaml
+- pvcs.yaml
+- routes.yaml
+- secrets.yaml
+- svcs.yaml
+- apicurio-studio-api-dc.yaml
+- apicurio-studio-auth-dc.yaml
+- apicurio-studio-ws-dc.yaml
+- apicurio-studio-ui-dc.yaml

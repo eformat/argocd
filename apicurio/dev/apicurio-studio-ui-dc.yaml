@@ -1,0 +1,31 @@
+---
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  name: apicurio-studio-ui
+spec:
+  template:
+    spec:
+      containers:
+      - env:
+        - name: APICURIO_KC_AUTH_URL
+          value: https://apicurio-studio-auth.apps.cluster.dev.com/auth
+        - name: APICURIO_KC_REALM
+          value: apicurio
+        - name: APICURIO_UI_HUB_API_URL
+          value: https://apicurio-studio-api.apps.cluster.dev.com
+        - name: APICURIO_UI_EDITING_URL
+          value: wss://apicurio-studio-ws.apps.cluster.dev.com
+        - name: APICURIO_UI_LOGOUT_REDIRECT_URI
+          value: /
+        - name: APICURIO_MIN_HEAP
+          value: 512m
+        - name: APICURIO_MAX_HEAP
+          value: 1200m
+        - name: APICURIO_MICROCKS_API_URL
+          value: https://microcksinstall-microcks.apps.cluster.dev.com/api
+        - name: APICURIO_MICROCKS_CLIENT_ID
+          value: microcks-serviceaccount
+        - name: APICURIO_MICROCKS_CLIENT_SECRET
+          value: abcdefghi-e435-41bn-0000-ec1234567
+        name: apicurio-studio-ui

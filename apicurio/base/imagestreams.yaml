@@ -1,0 +1,52 @@
+---
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: auth
+spec:
+  tags:
+  - from:
+      kind: DockerImage
+      name: quay.io/eformat/apicurio-studio-auth:latest
+    importPolicy:
+      scheduled: true
+    name: latest-release
+---
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: api
+spec:
+  tags:
+  - from:
+      kind: DockerImage
+      name: apicurio/apicurio-studio-api:latest-release
+    importPolicy:
+      scheduled: true
+    name: latest-release
+---
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: ws
+spec:
+  tags:
+  - from:
+      kind: DockerImage
+      name: apicurio/apicurio-studio-ws:latest-release
+    importPolicy:
+      scheduled: true
+    name: latest-release
+---
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: ui
+spec:
+  tags:
+  - from:
+      kind: DockerImage
+      name: apicurio/apicurio-studio-ui:latest-release
+    importPolicy:
+      scheduled: true
+    name: latest-release

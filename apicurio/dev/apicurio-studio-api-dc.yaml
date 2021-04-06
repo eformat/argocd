@@ -1,0 +1,41 @@
+---
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  name: apicurio-studio-api
+spec:
+  template:
+    spec:
+      containers:
+      - env:
+        - name: APICURIO_KC_AUTH_URL
+          value: https://apicurio-studio-auth.apps.cluster.dev.com/auth
+        - name: APICURIO_KC_REALM
+          value: apicurio
+        - name: APICURIO_DB_DRIVER_NAME
+          value: postgresql
+        - name: APICURIO_DB_CONNECTION_URL
+          value: jdbc:postgresql://postgresql:5432/apicuriodb
+        - name: APICURIO_DB_TYPE
+          value: postgresql9
+        - name: APICURIO_DB_USER_NAME
+          valueFrom:
+            secretKeyRef:
+              key: database-user
+              name: postgresql
+        - name: APICURIO_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: database-password
+              name: postgresql
+        - name: APICURIO_MIN_HEAP
+          value: 512m
+        - name: APICURIO_MAX_HEAP
+          value: 1400m
+        - name: APICURIO_MICROCKS_API_URL
+          value: https://microcksinstall-microcks.apps.cluster.dev.com/api
+        - name: APICURIO_MICROCKS_CLIENT_ID
+          value: microcks-serviceaccount
+        - name: APICURIO_MICROCKS_CLIENT_SECRET
+          value: abcdefg-e435-41ae-a900-ec00000000
+        name: apicurio-studio-api

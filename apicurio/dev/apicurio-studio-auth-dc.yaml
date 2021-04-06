@@ -1,0 +1,23 @@
+---
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  name: apicurio-studio-auth
+spec:
+  template:
+    spec:
+      containers:
+      - env:
+        - name: APICURIO_KEYCLOAK_USER
+          valueFrom:
+            secretKeyRef:
+              key: keycloak-user
+              name: apicurio-studio-auth
+        - name: APICURIO_KEYCLOAK_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: keycloak-password
+              name: apicurio-studio-auth
+        - name: APICURIO_UI_URL
+          value: https://apicurio-studio.apps.cluster.dev.com
+

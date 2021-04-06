@@ -1,0 +1,109 @@
+---
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  creationTimestamp: null
+  labels:
+    app: apicurio-studio-api
+    template: apicurio-studio
+  name: apicurio-studio-api
+spec:
+  replicas: 1
+  selector:
+    app: apicurio-studio-api
+    deploymentconfig: apicurio-studio-api
+  strategy:
+    activeDeadlineSeconds: 21600
+    recreateParams:
+      timeoutSeconds: 600
+    resources: {}
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: apicurio-studio-api
+        deploymentconfig: apicurio-studio-api
+        template: apicurio-studio
+    spec:
+      containers:
+      - env:
+        - name: APICURIO_KC_AUTH_URL
+          value: https://apicurio-studio-auth.apps.cluster.example.com/auth
+        - name: APICURIO_KC_REALM
+          value: apicurio
+        - name: APICURIO_DB_DRIVER_NAME
+          value: postgresql
+        - name: APICURIO_DB_CONNECTION_URL
+          value: jdbc:postgresql://postgresql:5432/apicuriodb
+        - name: APICURIO_DB_TYPE
+          value: postgresql9
+        - name: APICURIO_DB_USER_NAME
+          valueFrom:
+            secretKeyRef:
+              key: database-user
+              name: postgresql
+        - name: APICURIO_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: database-password
+              name: postgresql
+        - name: APICURIO_MIN_HEAP
+          value: 512m
+        - name: APICURIO_MAX_HEAP
+          value: 1400m
+        - name: APICURIO_MICROCKS_API_URL
+          value: https://microcksinstall-microcks.apps.cluster.example.com/api
+        - name: APICURIO_MICROCKS_CLIENT_ID
+          value: microcks-serviceaccount
+        - name: APICURIO_MICROCKS_CLIENT_SECRET
+          value: abc0986522-e435-41ae-a900-ec33333333
+        image: api:latest-release
+        imagePullPolicy: Always
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /system/ready
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        name: apicurio-studio-api
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /system/ready
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 15
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        resources:
+          limits:
+            cpu: "1"
+            memory: 1700Mi
+          requests:
+            cpu: 100m
+            memory: 800Mi
+        terminationMessagePath: /dev/termination-log
+      dnsPolicy: ClusterFirst
+      replicas: 1
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+  triggers:
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - apicurio-studio-api
+      from:
+        kind: ImageStreamTag
+        name: api:latest-release
+    type: ImageChange
+  - type: ConfigChange
+status: {}

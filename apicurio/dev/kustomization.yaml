@@ -1,0 +1,8 @@
+bases:
+- ../base
+
+patchesStrategicMerge:
+- apicurio-studio-api-dc.yaml
+- apicurio-studio-auth-dc.yaml
+- apicurio-studio-ui-dc.yaml
+- routes.yaml

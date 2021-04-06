@@ -19,3 +19,10 @@ metadata:
   name: apicurio-studio-ui
 spec:
   host: apicurio-studio.apps.cluster.dev.com
+---
+apiVersion: v1
+kind: Route
+metadata:
+  name: apicurio-studio-auth
+spec:
+  host: apicurio-studio-auth.apps.cluster.dev.com

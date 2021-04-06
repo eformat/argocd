@@ -38,4 +38,6 @@ spec:
           value: microcks-serviceaccount
         - name: APICURIO_MICROCKS_CLIENT_SECRET
           value: abcdefg-e435-41ae-a900-ec00000000
+        - name: APICURIO_SHARE_FOR_EVERYONE
+          value: true
         name: apicurio-studio-api
